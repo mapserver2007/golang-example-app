@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/mapserver2007/golang-example-app/cmd/sample/lib"
 )
 
@@ -11,6 +13,16 @@ func main() {
 	// fmt.Print(p2.Add())
 
 	// study2 クローラを使う
-	c := lib.Crawler{"https://kakaku.com"}
-	c.Crawle("title")
+	// c := lib.Crawler{"https://kakaku.com"}
+	// c.Crawle("title")
+
+	// study3 DB
+	db := lib.Database{}
+	db.Connect("mysql", "mariadb:mariadb@tcp(localhost:13340)/godb")
+	defer db.Close()
+
+	rows := db.FindAll()
+	for _, r := range rows {
+		fmt.Println(r.Name)
+	}
 }
