@@ -1,0 +1,27 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: golang-example-app
+servers:
+  - url: http://localhost:8080
+    description: example local server
+paths:
+  /echo:
+    get:
+      tags:
+        - example
+      summary: age
+      operationId: getAge
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+components:
+  schemas:
+    SimpleResponse:
+      properties:
+        result:
+          type: integer

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/mapserver2007/golang-example-app/cmd/sample/lib"
+	lib "github.com/mapserver2007/golang-example-app/cmd/sample/lib"
 )
 
 func main() {
@@ -25,4 +25,10 @@ func main() {
 	for _, r := range rows {
 		fmt.Println(r.Name)
 	}
+
+	// study4 WebServer
+
+	// study4 rest & generate code
+
+	// study5 grpc gateway
 }
