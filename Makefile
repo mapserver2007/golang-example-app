@@ -14,7 +14,7 @@ setup:
 	# go get -u github.com/go-swagger/go-swagger/cmd/swagger
 
 lint:
-	golint -set_exit_status web/...
+	golangci-lint run --golint.min-confidence 1.1
 fmt:
 	goimports -w web
 gen:
@@ -23,4 +23,4 @@ gen:
 	cp -r web/openapi/out/go web/openapi
 	rm -rf web/openapi/out
 run-server:
-	go run web/openapi/out/main.go
+	go run web/main.go

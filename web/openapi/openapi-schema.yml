@@ -18,10 +18,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SimpleResponse'
+                $ref: '#/components/schemas/GetUserResponses'
 components:
   schemas:
-    SimpleResponse:
+    GetUserResponses:
       properties:
-        result:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetUserResponse'
+    GetUserResponse:
+      properties:
+        name:
+          type: string
+        age:
           type: integer

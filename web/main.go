@@ -11,9 +11,8 @@ import (
 func main() {
 	log.Printf("Server started")
 
-	ApiService := services.NewApiService()
-	// ExampleApiService := openapi.NewExampleApiService()
-	ExampleApiController := openapi.NewExampleApiController(ApiService)
+	APIService := services.NewAPIService()
+	ExampleApiController := openapi.NewExampleApiController(APIService)
 
 	router := openapi.NewRouter(ExampleApiController)
 
