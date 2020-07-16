@@ -4,14 +4,14 @@ setup:
 	# dev tools
 	go get -u golang.org/x/lint/golint
 	go get -u golang.org/x/tools/cmd/goimports
+	# framework
+	go get -u github.com/labstack/echo/...
 	# db
 	go get -u github.com/go-gorp/gorp
 	go get -u github.com/go-sql-driver/mysql
-	# scraping
+	# others
+	go get -u gopkg.in/yaml.v2
 	go get -u github.com/PuerkitoBio/goquery
-	# openapi
-	# go get -u github.com/getkin/kin-openapi
-	# go get -u github.com/go-swagger/go-swagger/cmd/swagger
 
 lint:
 	golangci-lint run --golint.min-confidence 1.1

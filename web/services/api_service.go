@@ -15,11 +15,22 @@ func NewAPIService() openapi.ExampleApiServicer {
 
 // GetAge method
 func (s *APIService) GetAge() (interface{}, error) {
-	db := models.Database{}
-	db.Connect("mysql", "mariadb:mariadb@tcp(localhost:13340)/godb")
-	defer db.Close()
-	users := db.FindAll()
+	conn := models.GetConnection("mysql", "mariadb", "mariadb", "localhost", "13340", "godb")
+	defer conn.Db.Close()
+
+	db := models.User{Connection: conn}
+	rows := db.FindAll()
+
+	users := s.convertUserModelToResponse(rows)
 	return openapi.GetUserResponses{
 		Users: users,
 	}, nil
+}
+
+func (s *APIService) convertUserModelToResponse(list []models.UserModel) []openapi.GetUserResponse {
+	var responses = []openapi.GetUserResponse{}
+	for _, elem := range list {
+		responses = append(responses, openapi.GetUserResponse{Name: elem.Name, Age: elem.Age})
+	}
+	return responses
 }
