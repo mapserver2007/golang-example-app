@@ -6,12 +6,12 @@ servers:
   - url: http://localhost:8080
     description: example local server
 paths:
-  /echo:
+  /users:
     get:
       tags:
         - example
-      summary: age
-      operationId: getAge
+      summary: all users
+      operationId: getUsers
       responses:
         '200':
           description: success
@@ -19,8 +19,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetUserResponses'
+    post:
+      tags:
+        - example
+      summary: create user
+      operationId: postUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUserRequest'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleStatusResponse'
+
 components:
   schemas:
+    SimpleStatusResponse:
+      properties:
+        status:
+          type: integer
     GetUserResponses:
       properties:
         users:
@@ -31,5 +54,15 @@ components:
       properties:
         name:
           type: string
+        age:
+          type: integer
+    PostUserRequest:
+      required:
+        - name
+        - age
+      properties:
+        name:
+          type: string
+          minLength: 1
         age:
           type: integer

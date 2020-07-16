@@ -24,9 +24,16 @@ func NewExampleApiService() ExampleApiServicer {
 	return &ExampleApiService{}
 }
 
-// GetAge - age
-func (s *ExampleApiService) GetAge() (interface{}, error) {
-	// TODO - update GetAge with the required logic for this service method.
+// GetUsers - all users
+func (s *ExampleApiService) GetUsers() (interface{}, error) {
+	// TODO - update GetUsers with the required logic for this service method.
 	// Add api_example_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'GetAge' not implemented")
+	return nil, errors.New("service method 'GetUsers' not implemented")
+}
+
+// PostUser - create user
+func (s *ExampleApiService) PostUser(postUserRequest PostUserRequest) (interface{}, error) {
+	// TODO - update PostUser with the required logic for this service method.
+	// Add api_example_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+	return nil, errors.New("service method 'PostUser' not implemented")
 }

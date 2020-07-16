@@ -10,6 +10,7 @@
 package openapi
 
 import (
+	"encoding/json"
 	"net/http"
 	"strings"
 )
@@ -28,17 +29,40 @@ func NewExampleApiController(s ExampleApiServicer) Router {
 func (c *ExampleApiController) Routes() Routes {
 	return Routes{
 		{
-			"GetAge",
+			"GetUsers",
 			strings.ToUpper("Get"),
-			"/echo",
-			c.GetAge,
+			"/users",
+			c.GetUsers,
+		},
+		{
+			"PostUser",
+			strings.ToUpper("Post"),
+			"/users",
+			c.PostUser,
 		},
 	}
 }
 
-// GetAge - age
-func (c *ExampleApiController) GetAge(w http.ResponseWriter, r *http.Request) {
-	result, err := c.service.GetAge()
+// GetUsers - all users
+func (c *ExampleApiController) GetUsers(w http.ResponseWriter, r *http.Request) {
+	result, err := c.service.GetUsers()
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	EncodeJSONResponse(result, nil, w)
+}
+
+// PostUser - create user
+func (c *ExampleApiController) PostUser(w http.ResponseWriter, r *http.Request) {
+	postUserRequest := &PostUserRequest{}
+	if err := json.NewDecoder(r.Body).Decode(&postUserRequest); err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	result, err := c.service.PostUser(*postUserRequest)
 	if err != nil {
 		w.WriteHeader(500)
 		return

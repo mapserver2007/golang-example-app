@@ -17,7 +17,8 @@ import (
 // The ExampleApiRouter implementation should parse necessary information from the http request,
 // pass the data to a ExampleApiServicer to perform the required actions, then write the service results to the http response.
 type ExampleApiRouter interface {
-	GetAge(http.ResponseWriter, *http.Request)
+	GetUsers(http.ResponseWriter, *http.Request)
+	PostUser(http.ResponseWriter, *http.Request)
 }
 
 // ExampleApiServicer defines the api actions for the ExampleApi service
@@ -25,5 +26,6 @@ type ExampleApiRouter interface {
 // while the service implementation can ignored with the .openapi-generator-ignore file
 // and updated with the logic required for the API.
 type ExampleApiServicer interface {
-	GetAge() (interface{}, error)
+	GetUsers() (interface{}, error)
+	PostUser(PostUserRequest) (interface{}, error)
 }

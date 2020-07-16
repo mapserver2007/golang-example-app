@@ -23,6 +23,9 @@ require (
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
 	golang.org/x/tools v0.0.0-20200715235423-130c9f19d3fe // indirect
+	google.golang.org/genproto v0.0.0-20200715011427-11fb19a81f2c // indirect
+	google.golang.org/grpc v1.30.0 // indirect
+	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/gorp.v1 v1.7.2
 	gopkg.in/yaml.v2 v2.3.0
 )

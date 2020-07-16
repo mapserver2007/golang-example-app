@@ -1,4 +1,4 @@
-GO_CMD=go
+PROJECT_ROOT=$(GOPATH)/src/github.com/mapserver2007/golang-example-app
 
 setup:
 	# dev tools
@@ -7,8 +7,12 @@ setup:
 	# framework
 	go get -u github.com/labstack/echo/...
 	# db
-	go get -u github.com/go-gorp/gorp
+	go get -u gopkg.in/gorp.v1
 	go get -u github.com/go-sql-driver/mysql
+	# grpc
+	brew install protobuf
+	go get -u google.golang.org/grpc
+	go get -u github.com/golang/protobuf/protoc-gen-go
 	# others
 	go get -u gopkg.in/yaml.v2
 	go get -u github.com/PuerkitoBio/goquery
@@ -24,3 +28,6 @@ gen:
 	rm -rf web/openapi/out
 run-server:
 	go run web/main.go
+
+proto:
+	protoc --go_out=plugins=grpc:$(PROJECT_ROOT)/grpc-web/proto grpc-web/proto/user.proto

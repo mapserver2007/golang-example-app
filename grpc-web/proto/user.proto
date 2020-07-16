@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package example;
+option go_package = "go;proto";
+
+message User {
+  string name = 1;
+  int32 age = 2;
+}
+
+message Users {
+  repeated User users = 1;
+}

@@ -13,8 +13,8 @@ func NewAPIService() openapi.ExampleApiServicer {
 	return &APIService{}
 }
 
-// GetAge method
-func (s *APIService) GetAge() (interface{}, error) {
+// GetUsers - all users
+func (s *APIService) GetUsers() (interface{}, error) {
 	conn := models.GetConnection()
 	defer conn.Db.Close()
 
@@ -24,6 +24,24 @@ func (s *APIService) GetAge() (interface{}, error) {
 	users := s.convertUserModelToResponse(rows)
 	return openapi.GetUserResponses{
 		Users: users,
+	}, nil
+}
+
+// PostUser - create user
+func (s *APIService) PostUser(postUserRequest openapi.PostUserRequest) (interface{}, error) {
+	conn := models.GetConnection()
+	defer conn.Db.Close()
+
+	db := models.User{Connection: conn}
+
+	if err := db.CreateUser(postUserRequest); err != nil {
+		return openapi.SimpleStatusResponse{
+			Status: 500,
+		}, err
+	}
+
+	return openapi.SimpleStatusResponse{
+		Status: 201,
 	}, nil
 }
 
