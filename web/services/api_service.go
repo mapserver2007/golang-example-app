@@ -1,7 +1,7 @@
 package services
 
 import (
-	models "github.com/mapserver2007/golang-example-app/web/models"
+	"github.com/mapserver2007/golang-example-app/web/models"
 	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
 )
 
@@ -15,7 +15,7 @@ func NewAPIService() openapi.ExampleApiServicer {
 
 // GetAge method
 func (s *APIService) GetAge() (interface{}, error) {
-	conn := models.GetConnection("mysql", "mariadb", "mariadb", "localhost", "13340", "godb")
+	conn := models.GetConnection()
 	defer conn.Db.Close()
 
 	db := models.User{Connection: conn}

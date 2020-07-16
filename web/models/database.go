@@ -22,7 +22,7 @@ type DB struct {
 
 var configPath = "web/conf/db.yml"
 
-func GetConnection(dbms, userId, password, host, port, database string) *gorp.DbMap {
+func GetConnection() *gorp.DbMap {
 	dbconfig, err := loadConfig()
 	if err != nil {
 		log.Fatal(err)
