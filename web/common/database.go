@@ -1,4 +1,4 @@
-package models
+package database
 
 import (
 	"database/sql"
@@ -39,6 +39,32 @@ func GetConnection() *gorp.DbMap {
 	}
 
 	return &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{Engine: "InnoDB", Encoding: "UTF8"}}
+}
+
+// Transaction Scope - transaction wrapper
+func TransactionScope(db *gorp.DbMap, tranFunc func(*gorp.Transaction) error) (err error) {
+	var tran *gorp.Transaction
+	tran, err = db.Begin()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	defer func() {
+		if proc := recover(); proc != nil {
+			_ = tran.Rollback()
+			panic(proc)
+		} else if err != nil {
+			_ = tran.Rollback()
+		} else {
+			_ = tran.Commit()
+			err = nil
+		}
+	}()
+
+	err = tranFunc(tran)
+
+	return
 }
 
 func loadConfig() (DB, error) {

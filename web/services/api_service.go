@@ -1,6 +1,7 @@
 package services
 
 import (
+	database "github.com/mapserver2007/golang-example-app/web/common"
 	"github.com/mapserver2007/golang-example-app/web/models"
 	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
 )
@@ -15,7 +16,7 @@ func NewAPIService() openapi.ExampleApiServicer {
 
 // GetUsers - all users
 func (s *APIService) GetUsers() (interface{}, error) {
-	conn := models.GetConnection()
+	conn := database.GetConnection()
 	defer conn.Db.Close()
 
 	db := models.User{Connection: conn}
@@ -29,7 +30,7 @@ func (s *APIService) GetUsers() (interface{}, error) {
 
 // PostUser - create user
 func (s *APIService) PostUser(postUserRequest openapi.PostUserRequest) (interface{}, error) {
-	conn := models.GetConnection()
+	conn := database.GetConnection()
 	defer conn.Db.Close()
 
 	db := models.User{Connection: conn}

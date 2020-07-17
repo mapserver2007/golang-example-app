@@ -3,6 +3,7 @@ package models
 import (
 	"log"
 
+	database "github.com/mapserver2007/golang-example-app/web/common"
 	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
 	"gopkg.in/gorp.v1"
 )
@@ -25,22 +26,16 @@ func (db *User) FindAll() []UserModel {
 	return result
 }
 
-func (db *User) CreateUser(request openapi.PostUserRequest) error {
-	db.Connection.AddTableWithName(UserModel{}, "users")
-	user := UserModel{Name: request.Name, Age: request.Age}
-	tran, err := db.Connection.Begin()
-	if err != nil {
+func (db *User) CreateUser(request openapi.PostUserRequest) (err error) {
+	if err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) error {
+		db.Connection.AddTableWithName(UserModel{}, "users")
+		user := UserModel{Name: request.Name, Age: request.Age}
+		return tran.Insert(&user)
+	}); err != nil {
 		log.Fatal(err)
 		return err
 	}
-
-	err = tran.Insert(&user)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	return tran.Commit()
+	return nil
 }
 
 func (db *User) sqlFindAll() string {
