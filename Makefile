@@ -1,6 +1,7 @@
 PROJECT_ROOT=$(GOPATH)/src/github.com/mapserver2007/golang-example-app
 
 setup:
+	go mod tidy
 	# dev tools
 	go get -u golang.org/x/lint/golint
 	go get -u golang.org/x/tools/cmd/goimports
