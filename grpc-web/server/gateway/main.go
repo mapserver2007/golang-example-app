@@ -9,7 +9,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	config "github.com/mapserver2007/golang-example-app/grpc-web/config"
+	constant "github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
 	gw "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"google.golang.org/grpc"
 )
@@ -21,13 +21,13 @@ func run() error {
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	endpoint := fmt.Sprintf("%s:%s", config.Host, config.GrpcServerPort)
+	endpoint := fmt.Sprintf("%s:%s", constant.ServerHost, constant.GrpcServerPort)
 	err := gw.RegisterGetUsersServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
 	if err != nil {
 		return err
 	}
 
-	gatewayEndpoint := fmt.Sprintf("%s:%s", config.Host, config.GatewayServerPort)
+	gatewayEndpoint := fmt.Sprintf("%s:%s", constant.ServerHost, constant.GatewayServerPort)
 	log.Printf("gRPC Gateway Server started: %s\n", gatewayEndpoint)
 	return http.ListenAndServe(gatewayEndpoint, mux)
 }

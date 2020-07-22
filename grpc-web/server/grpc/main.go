@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	config "github.com/mapserver2007/golang-example-app/grpc-web/config"
+	constant "github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	services "github.com/mapserver2007/golang-example-app/grpc-web/services"
 	"google.golang.org/grpc"
@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	serverHost := fmt.Sprintf("%s:%s", config.Host, config.GrpcServerPort)
+	serverHost := fmt.Sprintf("%s:%s", constant.ServerHost, constant.GrpcServerPort)
 	listen, err := net.Listen("tcp", serverHost)
 	if err != nil {
 		log.Fatalln(err)

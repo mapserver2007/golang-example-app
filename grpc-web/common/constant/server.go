@@ -1,5 +1,5 @@
-package server
+package constant
 
-const Host = "localhost"
+const ServerHost = "localhost"
 const GatewayServerPort = "3001"
 const GrpcServerPort = "15002"
