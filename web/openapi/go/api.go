@@ -19,6 +19,7 @@ import (
 type ExampleApiRouter interface {
 	GetUsers(http.ResponseWriter, *http.Request)
 	PostUser(http.ResponseWriter, *http.Request)
+	PutUser(http.ResponseWriter, *http.Request)
 }
 
 // ExampleApiServicer defines the api actions for the ExampleApi service
@@ -28,4 +29,5 @@ type ExampleApiRouter interface {
 type ExampleApiServicer interface {
 	GetUsers() (interface{}, error)
 	PostUser(PostUserRequest) (interface{}, error)
+	PutUser(string, PutUserRequest) (interface{}, error)
 }

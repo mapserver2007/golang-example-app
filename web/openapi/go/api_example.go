@@ -13,6 +13,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // A ExampleApiController binds http requests to an api service and writes the service results to the http response
@@ -40,6 +42,12 @@ func (c *ExampleApiController) Routes() Routes {
 			"/users",
 			c.PostUser,
 		},
+		{
+			"PutUser",
+			strings.ToUpper("Put"),
+			"/users/{userId}",
+			c.PutUser,
+		},
 	}
 }
 
@@ -63,6 +71,25 @@ func (c *ExampleApiController) PostUser(w http.ResponseWriter, r *http.Request) 
 	}
 
 	result, err := c.service.PostUser(*postUserRequest)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	EncodeJSONResponse(result, nil, w)
+}
+
+// PutUser - update user
+func (c *ExampleApiController) PutUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userId := params["userId"]
+	putUserRequest := &PutUserRequest{}
+	if err := json.NewDecoder(r.Body).Decode(&putUserRequest); err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	result, err := c.service.PutUser(userId, *putUserRequest)
 	if err != nil {
 		w.WriteHeader(500)
 		return

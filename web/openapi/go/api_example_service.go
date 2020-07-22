@@ -37,3 +37,10 @@ func (s *ExampleApiService) PostUser(postUserRequest PostUserRequest) (interface
 	// Add api_example_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 	return nil, errors.New("service method 'PostUser' not implemented")
 }
+
+// PutUser - update user
+func (s *ExampleApiService) PutUser(userId string, putUserRequest PutUserRequest) (interface{}, error) {
+	// TODO - update PutUser with the required logic for this service method.
+	// Add api_example_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+	return nil, errors.New("service method 'PutUser' not implemented")
+}

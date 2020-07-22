@@ -37,8 +37,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleStatusResponse'
+  /users/{userId}:
+    put:
+      tags:
+        - example
+      summary: update user
+      operationId: putUser
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutUserRequest'
+      responses:
+        '204':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutUserRequest'
 
 components:
+  parameters:
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     SimpleStatusResponse:
       properties:
@@ -57,6 +85,16 @@ components:
         age:
           type: integer
     PostUserRequest:
+      required:
+        - name
+        - age
+      properties:
+        name:
+          type: string
+          minLength: 1
+        age:
+          type: integer
+    PutUserRequest:
       required:
         - name
         - age
