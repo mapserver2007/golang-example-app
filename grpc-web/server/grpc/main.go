@@ -12,11 +12,6 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	host = "localhost"
-	port = "3001"
-)
-
 func main() {
 	serverHost := fmt.Sprintf("%s:%s", config.Host, config.GrpcServerPort)
 	listen, err := net.Listen("tcp", serverHost)

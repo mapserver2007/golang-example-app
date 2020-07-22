@@ -6,17 +6,31 @@ option go_package = "go;proto";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
-message User {
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
   string name = 1;
   int32 age = 2;
 }
 
-message UsersResponse {
-  repeated User users = 1;
+message GetUsersResponse {
+  repeated GetUserResponse users = 1;
+}
+
+message PostUserRequest {
+
 }
 
 service GetUsersService {
-  rpc GetUsers (google.protobuf.Empty) returns (UsersResponse) {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/user/{id}"
+    };
+  }
+
+  rpc GetUsers (google.protobuf.Empty) returns (GetUsersResponse) {
     option (google.api.http) = {
       get: "/v1/users"
     };

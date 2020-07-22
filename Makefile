@@ -38,3 +38,6 @@ proto:
 	protoc -I ./grpc-web/proto ./grpc-web/proto/*.proto \
 		--grpc-gateway_out=logtostderr=true,paths=source_relative:./grpc-web/gen/go \
 		--go_out=plugins=grpc,paths=source_relative:./grpc-web/gen/go
+run-grpc-server:
+	go run grpc-web/server/grpc/main.go
+	go run grpc-web/server/gateway/main.go

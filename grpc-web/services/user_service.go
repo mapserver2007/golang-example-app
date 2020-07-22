@@ -9,13 +9,12 @@ import (
 
 type UserService struct{}
 
-// func NewUserService() UserService {
-// 	return &UserService{}
-// }
+func (s *UserService) GetUser(_ context.Context, _ *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+	return &pb.GetUserResponse{Name: "test", Age: 20}, nil
+}
 
-func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.UsersResponse, error) {
-	// TODO
-	users := []*pb.User{}
-	users = append(users, &pb.User{Name: "test", Age: 10})
-	return &pb.UsersResponse{Users: users}, nil
+func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.GetUsersResponse, error) {
+	users := []*pb.GetUserResponse{}
+	users = append(users, &pb.GetUserResponse{Name: "test", Age: 10})
+	return &pb.GetUsersResponse{Users: users}, nil
 }
