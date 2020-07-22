@@ -3,11 +3,22 @@ syntax = "proto3";
 package example;
 option go_package = "go;proto";
 
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
 message User {
   string name = 1;
   int32 age = 2;
 }
 
-message Users {
+message UsersResponse {
   repeated User users = 1;
+}
+
+service GetUsersService {
+  rpc GetUsers (google.protobuf.Empty) returns (UsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
 }

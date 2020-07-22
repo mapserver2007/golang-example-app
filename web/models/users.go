@@ -27,10 +27,21 @@ func (db *User) FindAll() []UserModel {
 }
 
 func (db *User) CreateUser(request openapi.PostUserRequest) (err error) {
+	db.Connection.AddTableWithName(UserModel{}, "users")
 	if err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) error {
-		db.Connection.AddTableWithName(UserModel{}, "users")
 		user := UserModel{Name: request.Name, Age: request.Age}
 		return tran.Insert(&user)
+	}); err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
+
+func (db *User) UpdateUser(userId string, request openapi.PutUserRequest) (err error) {
+	if err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (err error) {
+		_, err = tran.Exec(db.sqlUpdateUserById(), request.Name, request.Age, userId)
+		return err
 	}); err != nil {
 		log.Fatal(err)
 		return err
@@ -45,5 +56,17 @@ SELECT
   age
 FROM
   users
+`
+}
+
+func (db *User) sqlUpdateUserById() string {
+	return `
+UPDATE
+	users
+SET
+	name = ?,
+	age = ?
+WHERE
+	id = ?
 `
 }
