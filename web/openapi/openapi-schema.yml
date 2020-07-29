@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: golang-example-app
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:3000/v1/
     description: example local server
 paths:
   /users:

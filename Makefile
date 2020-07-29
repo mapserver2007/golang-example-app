@@ -9,7 +9,7 @@ setup:
 	go get -u golang.org/x/lint/golint
 	go get -u golang.org/x/tools/cmd/goimports
 	# framework
-	go get -u github.com/labstack/echo/...
+	# go get -u github.com/labstack/echo/...
 	# db
 	go get -u gopkg.in/gorp.v1
 	go get -u github.com/go-sql-driver/mysql
@@ -20,6 +20,7 @@ setup:
 	go get -u google.golang.org/grpc
 	# others
 	go get -u gopkg.in/yaml.v2
+	go get -u github.com/sirupsen/logrus
 	go get -u github.com/PuerkitoBio/goquery
 
 lint:

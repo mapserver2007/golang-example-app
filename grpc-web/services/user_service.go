@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 	database "github.com/mapserver2007/golang-example-app/grpc-web/common/database"
+	log "github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"github.com/mapserver2007/golang-example-app/grpc-web/models"
 )
@@ -23,7 +24,8 @@ func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.Get
 	row, err := db.FindById(id)
 
 	if err != nil {
-		return &pb.GetUserResponse{}, err
+		log.Error(err)
+		return &pb.GetUserResponse{}, nil
 	}
 
 	return &pb.GetUserResponse{Name: row.Name, Age: row.Age}, nil
@@ -37,6 +39,7 @@ func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.GetUsersR
 	rows, err := db.FindAll()
 
 	if err != nil {
+		log.Error(err)
 		return &pb.GetUsersResponse{}, nil
 	}
 
@@ -48,6 +51,15 @@ func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.GetUsersR
 }
 
 func (s *UserService) PostUser(_ context.Context, in *pb.PostUserRequest) (*pb.SimpleApiResponse, error) {
-	// TODO
+	conn := database.GetConnection()
+	defer conn.Db.Close()
+
+	db := models.User{Connection: conn}
+
+	if err := db.CreateUser(in); err != nil {
+		log.Error(err)
+		return &pb.SimpleApiResponse{}, err
+	}
+
 	return &pb.SimpleApiResponse{Status: 204}, nil
 }

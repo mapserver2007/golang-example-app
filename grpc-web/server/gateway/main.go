@@ -4,12 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	constant "github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
+	log "github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	gw "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"google.golang.org/grpc"
 )
@@ -28,7 +28,7 @@ func run() error {
 	}
 
 	gatewayEndpoint := fmt.Sprintf("%s:%s", constant.ServerHost, constant.GatewayServerPort)
-	log.Printf("gRPC Gateway Server started: %s\n", gatewayEndpoint)
+	log.Infof("gRPC Gateway Server started: %s\n", gatewayEndpoint)
 	return http.ListenAndServe(gatewayEndpoint, mux)
 }
 

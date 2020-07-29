@@ -1,7 +1,7 @@
 package services
 
 import (
-	database "github.com/mapserver2007/golang-example-app/web/common"
+	"github.com/mapserver2007/golang-example-app/web/common/database"
 	"github.com/mapserver2007/golang-example-app/web/models"
 	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
 )

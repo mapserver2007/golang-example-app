@@ -33,19 +33,19 @@ func (c *ExampleApiController) Routes() Routes {
 		{
 			"GetUsers",
 			strings.ToUpper("Get"),
-			"/users",
+			"/v1/users",
 			c.GetUsers,
 		},
 		{
 			"PostUser",
 			strings.ToUpper("Post"),
-			"/users",
+			"/v1/users",
 			c.PostUser,
 		},
 		{
 			"PutUser",
 			strings.ToUpper("Put"),
-			"/users/{userId}",
+			"/v1/users/{userId}",
 			c.PutUser,
 		},
 	}

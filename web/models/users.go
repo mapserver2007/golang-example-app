@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	database "github.com/mapserver2007/golang-example-app/web/common"
+	database "github.com/mapserver2007/golang-example-app/web/common/database"
 	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
 	"gopkg.in/gorp.v1"
 )
@@ -26,24 +26,22 @@ func (db *User) FindAll() []UserModel {
 	return result
 }
 
-func (db *User) CreateUser(request openapi.PostUserRequest) (err error) {
+func (db *User) CreateUser(request openapi.PostUserRequest) error {
 	db.Connection.AddTableWithName(UserModel{}, "users")
-	if err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) error {
+	if err := database.TransactionScope(db.Connection, func(tran *gorp.Transaction) error {
 		user := UserModel{Name: request.Name, Age: request.Age}
 		return tran.Insert(&user)
 	}); err != nil {
-		log.Fatal(err)
 		return err
 	}
 	return nil
 }
 
-func (db *User) UpdateUser(userId string, request openapi.PutUserRequest) (err error) {
-	if err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (err error) {
+func (db *User) UpdateUser(userId string, request openapi.PutUserRequest) error {
+	if err := database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (err error) {
 		_, err = tran.Exec(db.sqlUpdateUserById(), request.Name, request.Age, userId)
 		return err
 	}); err != nil {
-		log.Fatal(err)
 		return err
 	}
 	return nil

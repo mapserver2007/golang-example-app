@@ -1,16 +1,16 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/handlers"
+	log "github.com/mapserver2007/golang-example-app/web/common/log"
 	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
 	services "github.com/mapserver2007/golang-example-app/web/services"
 )
 
 func main() {
-	log.Printf("Server started")
+	log.Info("Server started")
 
 	APIService := services.NewAPIService()
 	ExampleApiController := openapi.NewExampleApiController(APIService)

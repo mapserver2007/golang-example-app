@@ -3,10 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	constant "github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
+	log "github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	"gopkg.in/gorp.v1"
 )
 
