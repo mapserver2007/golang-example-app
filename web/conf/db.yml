@@ -1,6 +1,6 @@
 dbms: mysql
 user_id: mariadb
 password: mariadb
-host: localhost
-port: 13340
+host: godb
+port: 3306
 dbname: godb

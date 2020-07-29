@@ -34,5 +34,5 @@ task :prune do
 end
 
 task :create_network do
-  force_sh 'docker network create --driver bridge godb'
+  force_sh 'docker network create --driver bridge golang_example_app'
 end

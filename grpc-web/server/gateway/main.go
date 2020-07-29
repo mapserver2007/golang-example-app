@@ -21,13 +21,13 @@ func run() error {
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	endpoint := fmt.Sprintf("%s:%s", constant.ServerHost, constant.GrpcServerPort)
+	endpoint := fmt.Sprintf("%s:%s", constant.GrpcServerHost, constant.GrpcServerPort)
 	err := gw.RegisterGetUsersServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
 	if err != nil {
 		return err
 	}
 
-	gatewayEndpoint := fmt.Sprintf("%s:%s", constant.ServerHost, constant.GatewayServerPort)
+	gatewayEndpoint := fmt.Sprintf("%s:%s", constant.GatewayServerHost, constant.GatewayServerPort)
 	log.Infof("gRPC Gateway Server started: %s\n", gatewayEndpoint)
 	return http.ListenAndServe(gatewayEndpoint, mux)
 }

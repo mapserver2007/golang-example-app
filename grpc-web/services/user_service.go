@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	database "github.com/mapserver2007/golang-example-app/grpc-web/common/database"
-	log "github.com/mapserver2007/golang-example-app/grpc-web/common/log"
+	"github.com/mapserver2007/golang-example-app/grpc-web/common/database"
+	"github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"github.com/mapserver2007/golang-example-app/grpc-web/models"
 )

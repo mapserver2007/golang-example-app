@@ -2,7 +2,7 @@ package models
 
 import (
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
-	database "github.com/mapserver2007/golang-example-app/web/common"
+	database "github.com/mapserver2007/golang-example-app/web/common/database"
 	"gopkg.in/gorp.v1"
 )
 

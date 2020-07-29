@@ -1,20 +1,62 @@
 version: '3'
 services:
+  openapi-server:
+    image: golang:1.14-alpine
+    container_name: golang-example-app-openapi-server
+    volumes:
+        - ../:/workspace
+    working_dir: /workspace
+    tty: true
+    hostname: grpc-server
+    ports:
+      - 3000:3000
+    networks:
+      - golang_example_app
+    command: >
+      go run web/main.go
+  grpc-server:
+    image: golang:1.14-alpine
+    container_name: golang-example-app-grpc-server
+    volumes:
+      - ../:/workspace
+    working_dir: /workspace
+    tty: true
+    hostname: grpc-server
+    ports:
+      - 3002:3002
+    networks:
+      - golang_example_app
+    command: >
+      go run grpc-web/server/grpc/main.go
+  grpc-gateway-server:
+    image: golang:1.14-alpine
+    container_name: golang-example-app-grpc-gateway-server
+    volumes:
+      - ../:/workspace
+    working_dir: /workspace
+    tty: true
+    hostname: gateway-server
+    ports:
+      - 3001:3001
+    networks:
+      - golang_example_app
+    command: >
+      go run grpc-web/server/gateway/main.go
   godb:
-    build: ./
+    build: ./db
     image: golang-example-app/mariadb
     command: mysqld --lower_case_table_names=1 --character-set-server=utf8 --collation-server=utf8_unicode_ci --skip-character-set-client-handshake
     container_name: godb
-    hostname: godb
+    tty: true
     ports:
-      - "13340:3306"
+      - 13306:3306
     environment:
       - MYSQL_DATABASE=godb
       - MYSQL_USER=mariadb
       - MYSQL_PASSWORD=mariadb
       - MYSQL_ROOT_PASSWORD=root
     networks:
-      - godb
+      - golang_example_app
 networks:
-  godb:
+  golang_example_app:
     external: true
