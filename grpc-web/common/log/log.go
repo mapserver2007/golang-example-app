@@ -1,6 +1,7 @@
 package log
 
 import (
+	"io"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -8,11 +9,26 @@ import (
 
 func init() {
 	logrus.SetFormatter(&logrus.TextFormatter{
-		ForceColors:   true,
 		FullTimestamp: true,
 	})
-	logrus.SetOutput(os.Stdout)
+
+	file, err := openFile("grpc-web/log/golang-example-app.log")
+	if err != nil {
+		panic(err)
+	}
+
+	logrus.SetOutput(io.MultiWriter(file))
 	logrus.SetLevel(logrus.InfoLevel)
+}
+
+func openFile(path string) (*os.File, error) {
+	_, errStat := os.Stat(path)
+	if !os.IsNotExist(errStat) {
+		f, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0755)
+		return f, err
+	}
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0755)
+	return f, err
 }
 
 func Fatal(args ...interface{}) {
