@@ -17,6 +17,7 @@ setup:
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 	go get -u github.com/golang/protobuf/protoc-gen-go
+	go get -u github.com/envoyproxy/protoc-gen-validate
 	go get -u google.golang.org/grpc
 	# others
 	go get -u gopkg.in/yaml.v2
@@ -37,7 +38,8 @@ run-server:
 proto:
 	protoc -I ./grpc-web/proto ./grpc-web/proto/*.proto \
 		--grpc-gateway_out=logtostderr=true,paths=source_relative:./grpc-web/gen/go \
-		--go_out=plugins=grpc,paths=source_relative:./grpc-web/gen/go
+		--go_out=plugins=grpc,paths=source_relative:./grpc-web/gen/go \
+		--validate_out="lang=go,paths=source_relative:./grpc-web/gen/go"
 run-grpc-server:
 	go run grpc-web/server/grpc/main.go
 	go run grpc-web/server/gateway/main.go

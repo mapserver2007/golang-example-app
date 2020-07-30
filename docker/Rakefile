@@ -10,7 +10,7 @@ def force_sh(cmd)
   end
 end
 
-task :init => [:create_network, :clean, :clean_server, :clean_db, :create_serevr, :create_database]
+task :init => [:create_network, :clean_server, :clean_db, :create_serevr, :create_database]
 
 task :restart => [:clean_server, :create_serevr]
 

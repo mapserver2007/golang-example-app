@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net"
 
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
 	"github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
@@ -19,7 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	server := grpc.NewServer()
+	server := newGRPCServer() // FIXME
 	pb.RegisterGetUsersServiceServer(server, &services.UserService{})
 	reflection.Register(server)
 
@@ -28,4 +30,14 @@ func main() {
 	if err := server.Serve(listen); err != nil {
 		panic(err)
 	}
+}
+
+func newGRPCServer() *grpc.Server {
+	s := grpc.NewServer(
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_validator.UnaryServerInterceptor(),
+		)),
+	)
+
+	return s
 }

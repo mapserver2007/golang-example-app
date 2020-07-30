@@ -5,6 +5,7 @@ option go_package = "go;proto";
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 message GetUserRequest {
   string id = 1;
@@ -20,7 +21,7 @@ message GetUsersResponse {
 }
 
 message PostUserRequest {
-  string name = 1;
+  string name = 1 [(validate.rules).string = { min_len: 1, max_len: 30}];
   int32 age = 2;
 }
 
