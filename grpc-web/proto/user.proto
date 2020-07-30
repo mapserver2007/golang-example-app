@@ -24,6 +24,12 @@ message PostUserRequest {
   int32 age = 2;
 }
 
+message PutUserRequest {
+  string id = 1;
+  string name = 2;
+  int32 age = 3;
+}
+
 message SimpleApiResponse {
   int32 status = 1;
 }
@@ -44,6 +50,13 @@ service GetUsersService {
   rpc PostUser (PostUserRequest) returns (SimpleApiResponse) {
     option (google.api.http) = {
       post: "/v1/users"
+      body: "*"
+    };
+  }
+
+  rpc PutUser (PutUserRequest) returns (SimpleApiResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
       body: "*"
     };
   }

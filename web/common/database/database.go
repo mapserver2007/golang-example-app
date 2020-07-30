@@ -55,10 +55,9 @@ func TransactionScope(db *gorp.DbMap, tranFunc func(*gorp.Transaction) error) (e
 			_ = tran.Rollback()
 			panic(proc)
 		} else if err != nil {
-			_ = tran.Rollback()
+			err = tran.Rollback()
 		} else {
-			_ = tran.Commit()
-			err = nil
+			err = tran.Commit()
 		}
 	}()
 

@@ -33,12 +33,12 @@ func GetConnection() *gorp.DbMap {
 }
 
 // Transaction Scope - transaction wrapper
-func TransactionScope(db *gorp.DbMap, tranFunc func(*gorp.Transaction) error) (err error) {
+func TransactionScope(db *gorp.DbMap, tranFunc func(*gorp.Transaction) (sql.Result, error)) (result sql.Result, err error) {
 	var tran *gorp.Transaction
 	tran, err = db.Begin()
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 
 	defer func() {
@@ -46,14 +46,13 @@ func TransactionScope(db *gorp.DbMap, tranFunc func(*gorp.Transaction) error) (e
 			_ = tran.Rollback()
 			panic(proc)
 		} else if err != nil {
-			_ = tran.Rollback()
+			err = tran.Rollback()
 		} else {
-			_ = tran.Commit()
-			err = nil
+			err = tran.Commit()
 		}
 	}()
 
-	err = tranFunc(tran)
+	result, err = tranFunc(tran)
 
 	return
 }

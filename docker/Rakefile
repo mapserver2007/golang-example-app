@@ -10,20 +10,44 @@ def force_sh(cmd)
   end
 end
 
-task :init => [:create_network, :prune] do
+task :init => [:create_network, :clean, :clean_server, :clean_db, :create_serevr, :create_database]
+
+task :restart => [:clean_server, :create_serevr]
+
+task :clean_server do
   cmd = <<-EOS
-    docker-compose build
+    pushd server
     docker-compose down
-    docker-compose up -d
+    popd
   EOS
   sh cmd
 end
 
-task :init_debug => [:create_network, :prune] do
+task :clean_db do
   cmd = <<-EOS
-    docker-compose build
+    pushd db
     docker-compose down
-    docker-compose up
+    popd
+  EOS
+  sh cmd
+end
+
+task :create_serevr do
+  cmd = <<-EOS
+    pushd server
+    docker-compose build
+    docker-compose up -d
+    popd
+  EOS
+  sh cmd
+end
+
+task :create_database do
+  cmd = <<-EOS
+    pushd db
+    docker-compose build
+    docker-compose up -d
+    popd
   EOS
   sh cmd
 end

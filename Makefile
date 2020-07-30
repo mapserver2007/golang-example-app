@@ -34,7 +34,6 @@ gen:
 	rm -rf web/openapi/out
 run-server:
 	go run web/main.go
-
 proto:
 	protoc -I ./grpc-web/proto ./grpc-web/proto/*.proto \
 		--grpc-gateway_out=logtostderr=true,paths=source_relative:./grpc-web/gen/go \

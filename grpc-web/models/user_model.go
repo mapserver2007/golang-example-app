@@ -1,8 +1,10 @@
 package models
 
 import (
+	"database/sql"
+
+	database "github.com/mapserver2007/golang-example-app/grpc-web/common/database"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
-	database "github.com/mapserver2007/golang-example-app/web/common/database"
 	"gopkg.in/gorp.v1"
 )
 
@@ -27,15 +29,20 @@ func (db *User) FindById(id int32) (UserModel, error) {
 	return result, err
 }
 
-func (db *User) CreateUser(request *pb.PostUserRequest) error {
+func (db *User) CreateUser(request *pb.PostUserRequest) (err error) {
 	db.Connection.AddTableWithName(UserModel{}, "users")
-	if err := database.TransactionScope(db.Connection, func(tran *gorp.Transaction) error {
+	_, err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
 		user := UserModel{Name: request.Name, Age: request.Age}
-		return tran.Insert(&user)
-	}); err != nil {
-		return err
-	}
-	return nil
+		return nil, tran.Insert(&user)
+	})
+	return
+}
+
+func (db *User) UpdateUser(request *pb.PutUserRequest) (result sql.Result, err error) {
+	result, err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
+		return tran.Exec(db.sqlUpdateUserById(), request.Name, request.Age, request.Id)
+	})
+	return
 }
 
 func (db *User) sqlFindAll() string {
@@ -55,6 +62,18 @@ SELECT
   age
 FROM
 	users
+WHERE
+	id = ?
+`
+}
+
+func (db *User) sqlUpdateUserById() string {
+	return `
+UPDATE
+	users
+SET
+	name = ?,
+	age = ?
 WHERE
 	id = ?
 `

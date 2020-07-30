@@ -61,5 +61,24 @@ func (s *UserService) PostUser(_ context.Context, in *pb.PostUserRequest) (*pb.S
 		return &pb.SimpleApiResponse{}, err
 	}
 
-	return &pb.SimpleApiResponse{Status: 204}, nil
+	return &pb.SimpleApiResponse{Status: 201}, nil
+}
+
+func (s *UserService) PutUser(_ context.Context, in *pb.PutUserRequest) (*pb.SimpleApiResponse, error) {
+	conn := database.GetConnection()
+	defer conn.Db.Close()
+
+	db := models.User{Connection: conn}
+
+	result, err := db.UpdateUser(in)
+	if err != nil {
+		log.Error(err)
+		return &pb.SimpleApiResponse{}, err
+	}
+	rows, _ := result.RowsAffected()
+	if rows > 0 {
+		return &pb.SimpleApiResponse{Status: 204}, nil
+	} else {
+		return &pb.SimpleApiResponse{Status: 404}, nil
+	}
 }
