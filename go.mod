@@ -16,11 +16,13 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	github.com/iancoleman/strcase v0.0.0-20191112232945-16388991a334 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/labstack/gommon v0.3.0
 	github.com/lib/pq v1.7.0 // indirect
 	github.com/lyft/protoc-gen-star v0.4.15 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-sqlite3 v1.14.0 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/poy/onpar v1.0.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca
 	github.com/sirupsen/logrus v1.6.0

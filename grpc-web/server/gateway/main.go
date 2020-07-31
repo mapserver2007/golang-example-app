@@ -9,6 +9,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	constant "github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
+	http_error "github.com/mapserver2007/golang-example-app/grpc-web/common/http"
 	log "github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	gw "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"google.golang.org/grpc"
@@ -18,6 +19,7 @@ func run() error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+	runtime.GlobalHTTPErrorHandler = http_error.CustomHTTPError
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}

@@ -267,7 +267,19 @@ func (m *PostUserRequest) Validate() error {
 		}
 	}
 
-	// no validation rules for Age
+	if !_PostUserRequest_Name_Pattern.MatchString(m.GetName()) {
+		return PostUserRequestValidationError{
+			field:  "Name",
+			reason: "value does not match regex pattern \"^[a-zA-Z0-9\\\\s]+$\"",
+		}
+	}
+
+	if m.GetAge() <= 0 {
+		return PostUserRequestValidationError{
+			field:  "Age",
+			reason: "value must be greater than 0",
+		}
+	}
 
 	return nil
 }
@@ -325,6 +337,8 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = PostUserRequestValidationError{}
+
+var _PostUserRequest_Name_Pattern = regexp.MustCompile("^[a-zA-Z0-9\\s]+$")
 
 // Validate checks the field values on PutUserRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, an error

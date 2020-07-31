@@ -21,7 +21,11 @@ func main() {
 		panic(err)
 	}
 
-	server := newGRPCServer() // FIXME
+	server := grpc.NewServer(
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_validator.UnaryServerInterceptor(),
+		)),
+	)
 	pb.RegisterGetUsersServiceServer(server, &services.UserService{})
 	reflection.Register(server)
 
@@ -30,14 +34,4 @@ func main() {
 	if err := server.Serve(listen); err != nil {
 		panic(err)
 	}
-}
-
-func newGRPCServer() *grpc.Server {
-	s := grpc.NewServer(
-		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-			grpc_validator.UnaryServerInterceptor(),
-		)),
-	)
-
-	return s
 }

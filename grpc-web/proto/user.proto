@@ -21,8 +21,12 @@ message GetUsersResponse {
 }
 
 message PostUserRequest {
-  string name = 1 [(validate.rules).string = { min_len: 1, max_len: 30}];
-  int32 age = 2;
+  string name = 1 [(validate.rules).string = {
+    min_len: 1,
+    max_len: 30,
+    pattern: "^[a-zA-Z0-9\\s]+$"
+  }];
+  int32 age = 2 [(validate.rules).int32.gt = 0];
 }
 
 message PutUserRequest {
