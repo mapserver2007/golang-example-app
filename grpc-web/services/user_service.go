@@ -5,22 +5,21 @@ import (
 	"strconv"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/mapserver2007/golang-example-app/grpc-web/common/database"
 	"github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"github.com/mapserver2007/golang-example-app/grpc-web/models"
+	"gopkg.in/gorp.v1"
 )
 
-type UserService struct{}
+type UserService struct {
+	Connection *gorp.DbMap
+}
 
 func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	id64, _ := strconv.ParseInt(in.Id, 10, 64)
 	id := int32(id64)
 
-	conn := database.GetConnection()
-	defer conn.Db.Close()
-
-	db := models.User{Connection: conn}
+	db := models.User{Connection: s.Connection}
 	row, err := db.FindById(id)
 
 	if err != nil {
@@ -32,10 +31,7 @@ func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.Get
 }
 
 func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.GetUsersResponse, error) {
-	conn := database.GetConnection()
-	defer conn.Db.Close()
-
-	db := models.User{Connection: conn}
+	db := models.User{Connection: s.Connection}
 	rows, err := db.FindAll()
 
 	if err != nil {
@@ -51,10 +47,7 @@ func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.GetUsersR
 }
 
 func (s *UserService) PostUser(_ context.Context, in *pb.PostUserRequest) (*pb.SimpleApiResponse, error) {
-	conn := database.GetConnection()
-	defer conn.Db.Close()
-
-	db := models.User{Connection: conn}
+	db := models.User{Connection: s.Connection}
 
 	if err := db.CreateUser(in); err != nil {
 		log.Error(err)
@@ -65,10 +58,7 @@ func (s *UserService) PostUser(_ context.Context, in *pb.PostUserRequest) (*pb.S
 }
 
 func (s *UserService) PutUser(_ context.Context, in *pb.PutUserRequest) (*pb.SimpleApiResponse, error) {
-	conn := database.GetConnection()
-	defer conn.Db.Close()
-
-	db := models.User{Connection: conn}
+	db := models.User{Connection: s.Connection}
 
 	result, err := db.UpdateUser(in)
 	if err != nil {

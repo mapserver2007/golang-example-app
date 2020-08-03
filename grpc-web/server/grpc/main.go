@@ -7,6 +7,7 @@ import (
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/mapserver2007/golang-example-app/grpc-web/common/constant"
+	"github.com/mapserver2007/golang-example-app/grpc-web/common/database"
 	"github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"github.com/mapserver2007/golang-example-app/grpc-web/services"
@@ -26,7 +27,7 @@ func main() {
 			grpc_validator.UnaryServerInterceptor(),
 		)),
 	)
-	pb.RegisterGetUsersServiceServer(server, &services.UserService{})
+	pb.RegisterGetUsersServiceServer(server, &services.UserService{Connection: database.GetConnection()})
 	reflection.Register(server)
 
 	log.Infof("gRPC Server started: %s\n", serverHost)
