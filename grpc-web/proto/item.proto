@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package example;
+option go_package = "go;proto";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+message GetItemRequest {
+  string id = 1;
+}
+
+message GetItemResponse {
+  string name = 1;
+  int32 price = 2;
+}
+
+message GetItemsResponse {
+  repeated GetItemResponse items = 1;
+}
+
+service GetItemsService {
+  rpc GetItem (GetItemRequest) returns (GetItemResponse) {
+    option (google.api.http) = {
+      get: "/v1/item/{id}"
+    };
+  }
+
+  rpc GetItems (google.protobuf.Empty) returns (GetItemsResponse) {
+    option (google.api.http) = {
+      get: "/v1/items"
+    };
+  }
+}

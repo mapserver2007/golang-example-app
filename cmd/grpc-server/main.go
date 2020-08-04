@@ -28,6 +28,7 @@ func main() {
 		)),
 	)
 	pb.RegisterGetUsersServiceServer(server, &services.UserService{Connection: database.GetConnection()})
+	pb.RegisterGetItemsServiceServer(server, &services.ItemService{Connection: database.GetConnection()})
 	reflection.Register(server)
 
 	log.Infof("gRPC Server started: %s\n", serverHost)
