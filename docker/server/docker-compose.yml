@@ -4,7 +4,7 @@ services:
     image: golang:1.14-alpine
     container_name: golang-example-app-openapi-server
     volumes:
-        - ../../:/workspace
+      - ../../:/workspace
     working_dir: /workspace
     tty: true
     hostname: grpc-server
@@ -13,7 +13,7 @@ services:
     networks:
       - golang_example_app
     command: >
-      go run web/main.go
+      go run cmd/openapi-server/main.go
   grpc-server:
     image: golang:1.14-alpine
     container_name: golang-example-app-grpc-server
@@ -27,7 +27,21 @@ services:
     networks:
       - golang_example_app
     command: >
-      go run grpc-web/server/grpc/main.go
+      go run cmd/grpc-server/main.go
+  # grpc-sub-server:
+  #   image: golang:1.14-alpine
+  #   container_name: golang-example-app-grpc-server
+  #   volumes:
+  #     - ../../:/workspace
+  #   working_dir: /workspace
+  #   tty: true
+  #   hostname: grpc-server
+  #   ports:
+  #     - 3002:3002
+  #   networks:
+  #     - golang_example_app
+  #   command: >
+  #     go run grpc-web/server/grpc/main.go
   grpc-gateway-server:
     image: golang:1.14-alpine
     container_name: golang-example-app-grpc-gateway-server
@@ -41,7 +55,7 @@ services:
     networks:
       - golang_example_app
     command: >
-      go run grpc-web/server/gateway/main.go
+      go run cmd/grpc-gateway-server/main.go
 networks:
   golang_example_app:
     external: true
