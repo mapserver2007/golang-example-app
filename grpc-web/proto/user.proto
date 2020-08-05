@@ -6,6 +6,7 @@ option go_package = "go;proto";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 import "validate/validate.proto";
+import "item.proto";
 
 message GetUserRequest {
   string id = 1;
@@ -18,6 +19,11 @@ message GetUserResponse {
 
 message GetUsersResponse {
   repeated GetUserResponse users = 1;
+}
+
+message GetUsersAndItemsRespones {
+  repeated GetUserResponse users = 1;
+  repeated GetItemResponse items = 2;
 }
 
 message PostUserRequest {
@@ -63,6 +69,12 @@ service GetUsersService {
     option (google.api.http) = {
       put: "/v1/users/{id}"
       body: "*"
+    };
+  }
+
+  rpc GetUsersAndItems (google.protobuf.Empty) returns (GetUsersAndItemsRespones) {
+    option (google.api.http) = {
+      get: "/v1/users_and_items"
     };
   }
 }

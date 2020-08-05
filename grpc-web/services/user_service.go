@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/mapserver2007/golang-example-app/grpc-web/common/client"
 	"github.com/mapserver2007/golang-example-app/grpc-web/common/log"
 	pb "github.com/mapserver2007/golang-example-app/grpc-web/gen/go"
 	"github.com/mapserver2007/golang-example-app/grpc-web/models"
@@ -30,7 +31,7 @@ func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.Get
 	return &pb.GetUserResponse{Name: row.Name, Age: row.Age}, nil
 }
 
-func (s *UserService) GetUsers(_ context.Context, _ *empty.Empty) (*pb.GetUsersResponse, error) {
+func (s *UserService) GetUsers(ctx context.Context, in *empty.Empty) (*pb.GetUsersResponse, error) {
 	db := models.User{Connection: s.Connection}
 	rows, err := db.FindAll()
 
@@ -71,4 +72,28 @@ func (s *UserService) PutUser(_ context.Context, in *pb.PutUserRequest) (*pb.Sim
 	} else {
 		return &pb.SimpleApiResponse{Status: 404}, nil
 	}
+}
+
+func (s *UserService) GetUsersAndItems(ctx context.Context, in *empty.Empty) (*pb.GetUsersAndItemsRespones, error) {
+	result, err := client.GrpcClient("grpc-sub-server:3012", ctx, in)
+	if err != nil {
+		log.Error(err)
+		return &pb.GetUsersAndItemsRespones{}, nil
+	}
+	items := result.(*pb.GetItemsResponse).Items
+
+	db := models.User{Connection: s.Connection}
+	rows, err := db.FindAll()
+
+	if err != nil {
+		log.Error(err)
+		return &pb.GetUsersAndItemsRespones{}, nil
+	}
+
+	var users = []*pb.GetUserResponse{}
+	for _, row := range rows {
+		users = append(users, &pb.GetUserResponse{Name: row.Name, Age: row.Age})
+	}
+
+	return &pb.GetUsersAndItemsRespones{Items: items, Users: users}, nil
 }
