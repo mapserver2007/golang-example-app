@@ -3,9 +3,26 @@
 ## サーバ起動
 ```sh
 $> rake
-$> http://localhost:3000/v1/users -i # openapi-server
-$> http://localhost:3001/v1/users -i # grpc-server
+$> http://localhost:4001/v1/users_and_items -i # grpc-server
 ```
+
+## 試したこと
+* サーバの起動
+  * grpc-gatewayサーバ
+  * grpcサーバ(本体)
+  * grpcサーバ(サービス1)
+  * grpcサーバ(サービス2)
+* サーバ間gRPC通信
+* DB処理
+  * gorp
+* ログ出力
+  * logrus
+* gatewayサーバ
+  * バリデーション
+    * RESTAPIのバリデーション(protobufの拡張)
+  * エラーハンドリング
+    * RESTAPIのエラーレスポンスをカスタマイズ
+* OpenAPI
 
 ## protoの拡張
 go getコマンドでprotoファイルの拡張を使う場合にFile not foundエラーになるときは
