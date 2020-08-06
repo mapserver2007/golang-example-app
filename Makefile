@@ -21,10 +21,10 @@ setup:
 	go get -u github.com/PuerkitoBio/goquery
 
 lint:
-	golangci-lint run --golint.min-confidence 1.1
+	golangci-lint run
 
 fmt:
-	goimports -e -d -local github.com server
+	goimports -e -d -local github.com
 
 protoc:
 	protoc -I ./proto ./proto/*.proto \
