@@ -1,4 +1,4 @@
-PROJECT_ROOT=$(GOPATH)/src/github.com/mapserver2007/golang-example-app
+# PROJECT_ROOT=$(GOPATH)/src/github.com/mapserver2007/golang-example-app
 
 setup-init:
 	brew install protobuf
@@ -27,7 +27,7 @@ setup:
 lint:
 	golangci-lint run --golint.min-confidence 1.1
 fmt:
-	goimports -w web
+	goimports -e -d -local github.com server
 gen:
 	sh web/openapi/generator.sh
 	goimports -w web
@@ -40,6 +40,11 @@ proto:
 		--grpc-gateway_out=logtostderr=true,paths=source_relative:./grpc-web/gen/go \
 		--go_out=plugins=grpc,paths=source_relative:./grpc-web/gen/go \
 		--validate_out="lang=go,paths=source_relative:./grpc-web/gen/go"
+proto2:
+	protoc -I ./server/proto ./server/proto/*.proto \
+		--grpc-gateway_out=logtostderr=true,paths=source_relative:./server/gen/go \
+		--go_out=plugins=grpc,paths=source_relative:./server/gen/go \
+		--validate_out="lang=go,paths=source_relative:./server/gen/go"
 run-grpc-server:
 	go run grpc-web/server/grpc/main.go
 	go run grpc-web/server/gateway/main.go

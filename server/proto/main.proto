@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package example;
+option go_package = "go;proto";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "user.proto";
+import "item.proto";
+
+message GetUsersAndItemsResponse {
+  repeated GetUserResponse users = 1;
+  repeated GetItemResponse items = 2;
+}
+
+service MainService {
+  rpc GetUsersAndItems (google.protobuf.Empty) returns (GetUsersAndItemsResponse) {
+    option (google.api.http) = {
+      get: "/v1/users_and_items"
+    };
+  }
+}
