@@ -78,52 +78,6 @@ services:
       LOGPATH: /workspace/server/grpc-gateway-server/log/grpc-gateway-server.log
     command: >
       go run server/grpc-gateway-server/main.go
-  # 以下古い
-  # grpc-server:
-  #   image: golang:1.14-alpine
-  #   container_name: golang-example-app-grpc-server
-  #   volumes:
-  #     - ../../:/workspace
-  #   working_dir: /workspace
-  #   tty: true
-  #   hostname: grpc-server
-  #   ports:
-  #     - 3002:3002
-  #   networks:
-  #     - golang_example_app
-  #   command: >
-  #     go run cmd/grpc-server/main.go
-  # grpc-sub-server:
-  #   image: golang:1.14-alpine
-  #   container_name: golang-example-app-grpc-sub-server
-  #   volumes:
-  #     - ../../:/workspace
-  #   working_dir: /workspace
-  #   tty: true
-  #   hostname: grpc-sub-server
-  #   ports:
-  #     - 3012:3012
-  #   networks:
-  #     - golang_example_app
-  #   command: >
-  #     go run cmd/grpc-sub-server/main.go
-  # grpc-gateway-server:
-  #   image: golang:1.14-alpine
-  #   container_name: golang-example-app-grpc-gateway-server
-  #   volumes:
-  #     - ../../:/workspace
-  #   working_dir: /workspace
-  #   tty: true
-  #   hostname: gateway-server
-  #   ports:
-  #     - 3001:3001
-  #   networks:
-  #     - golang_example_app
-  #   command: >
-  #     go run cmd/grpc-gateway-server/main.go
 networks:
   golang_example_app:
     external: true
-volumes:
-  dotgit:
-    driver: 'local'
