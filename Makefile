@@ -22,9 +22,10 @@ setup:
 
 lint:
 	golangci-lint run
+	goimports -e -d -local github.com ./grpc-*
 
 fmt:
-	goimports -e -d -local github.com
+	goimports -e -d -local github.com ./grpc-*
 
 protoc:
 	protoc -I ./proto ./proto/*.proto \
