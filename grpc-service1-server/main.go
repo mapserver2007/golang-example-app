@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"net"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
-	"github.com/mapserver2007/golang-example-app/server/common/constant"
-	"github.com/mapserver2007/golang-example-app/server/common/database"
-	"github.com/mapserver2007/golang-example-app/server/common/log"
-	pb "github.com/mapserver2007/golang-example-app/server/gen/go"
-	"github.com/mapserver2007/golang-example-app/server/grpc-service1-server/services"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
+	"github.com/mapserver2007/golang-example-app/common/constant"
+	"github.com/mapserver2007/golang-example-app/common/database"
+	"github.com/mapserver2007/golang-example-app/common/log"
+	pb "github.com/mapserver2007/golang-example-app/gen/go"
+	"github.com/mapserver2007/golang-example-app/grpc-service1-server/services"
 )
 
 func main() {

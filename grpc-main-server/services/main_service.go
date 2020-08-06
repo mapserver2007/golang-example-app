@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/mapserver2007/golang-example-app/server/common/log"
-	pb "github.com/mapserver2007/golang-example-app/server/gen/go"
+	"github.com/mapserver2007/golang-example-app/common/log"
+	pb "github.com/mapserver2007/golang-example-app/gen/go"
 )
 
 type MainService struct {

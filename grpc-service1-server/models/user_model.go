@@ -3,10 +3,11 @@ package models
 import (
 	"database/sql"
 
-	database "github.com/mapserver2007/golang-example-app/server/common/database"
-	pb "github.com/mapserver2007/golang-example-app/server/gen/go"
-	"github.com/mapserver2007/golang-example-app/server/grpc-service1-server/models/sqls"
 	"gopkg.in/gorp.v1"
+
+	database "github.com/mapserver2007/golang-example-app/common/database"
+	pb "github.com/mapserver2007/golang-example-app/gen/go"
+	"github.com/mapserver2007/golang-example-app/grpc-service1-server/models/sqls"
 )
 
 type UserModel struct {

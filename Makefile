@@ -22,17 +22,20 @@ setup:
 
 lint:
 	golangci-lint run --golint.min-confidence 1.1
+
 fmt:
 	goimports -e -d -local github.com server
-# gen:
+
+protoc:
+	protoc -I ./proto ./proto/*.proto \
+		--grpc-gateway_out=logtostderr=true,paths=source_relative:./gen/go \
+		--go_out=plugins=grpc,paths=source_relative:./gen/go \
+		--validate_out="lang=go,paths=source_relative:./gen/go"
+
+# openapi-gen:
 # 	sh openapi/generator.sh
 # 	goimports -w web
 # 	cp -r openapi-web/openapi/out/go web/openapi
 # 	rm -rf openapi-web/openapi/out
 # run-server:
 # 	go run openapi-web/main.go
-proto:
-	protoc -I ./server/proto ./server/proto/*.proto \
-		--grpc-gateway_out=logtostderr=true,paths=source_relative:./server/gen/go \
-		--go_out=plugins=grpc,paths=source_relative:./server/gen/go \
-		--validate_out="lang=go,paths=source_relative:./server/gen/go"

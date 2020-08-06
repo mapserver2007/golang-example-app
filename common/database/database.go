@@ -4,10 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/go-sql-driver/mysql"
-	constant "github.com/mapserver2007/golang-example-app/server/common/constant"
-	log "github.com/mapserver2007/golang-example-app/server/common/log"
 	"gopkg.in/gorp.v1"
+
+	_ "github.com/go-sql-driver/mysql"
+	constant "github.com/mapserver2007/golang-example-app/common/constant"
+	log "github.com/mapserver2007/golang-example-app/common/log"
 )
 
 type DB struct {

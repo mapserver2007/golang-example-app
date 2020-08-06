@@ -10,10 +10,10 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	constant "github.com/mapserver2007/golang-example-app/server/common/constant"
-	http_error "github.com/mapserver2007/golang-example-app/server/common/http"
-	log "github.com/mapserver2007/golang-example-app/server/common/log"
-	gw "github.com/mapserver2007/golang-example-app/server/gen/go"
+	constant "github.com/mapserver2007/golang-example-app/common/constant"
+	http_error "github.com/mapserver2007/golang-example-app/common/http"
+	log "github.com/mapserver2007/golang-example-app/common/log"
+	gw "github.com/mapserver2007/golang-example-app/gen/go"
 )
 
 func run() error {

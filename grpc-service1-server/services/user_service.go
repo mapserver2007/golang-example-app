@@ -7,9 +7,9 @@ import (
 	"gopkg.in/gorp.v1"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/mapserver2007/golang-example-app/server/common/log"
-	pb "github.com/mapserver2007/golang-example-app/server/gen/go"
-	"github.com/mapserver2007/golang-example-app/server/grpc-service1-server/models"
+	"github.com/mapserver2007/golang-example-app/common/log"
+	pb "github.com/mapserver2007/golang-example-app/gen/go"
+	"github.com/mapserver2007/golang-example-app/grpc-service1-server/models"
 )
 
 type UserService struct {

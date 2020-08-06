@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	log "github.com/mapserver2007/golang-example-app/server/common/log"
+	log "github.com/mapserver2007/golang-example-app/common/log"
 )
 
 type errorBody struct {

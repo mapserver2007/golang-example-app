@@ -27,9 +27,9 @@ services:
     networks:
       - golang_example_app
     environment:
-      LOGPATH: /workspace/server/grpc-main-server/log/grpc-main-server.log
+      LOGPATH: /workspace/grpc-main-server/logs/grpc-main-server.log
     command: >
-      go run server/grpc-main-server/main.go
+      go run grpc-main-server/main.go
   grpc-service1-server:
     image: golang:1.14-alpine
     container_name: golang-example-app-grpc-service1-server
@@ -43,9 +43,9 @@ services:
     networks:
       - golang_example_app
     environment:
-      LOGPATH: /workspace/server/grpc-gateway-server/log/grpc-service1-server.log
+      LOGPATH: /workspace/grpc-service1-server/logs/grpc-service1-server.log
     command: >
-      go run server/grpc-service1-server/main.go
+      go run grpc-service1-server/main.go
   grpc-service2-server:
     image: golang:1.14-alpine
     container_name: golang-example-app-grpc-service2-server
@@ -59,9 +59,9 @@ services:
     networks:
       - golang_example_app
     environment:
-      LOGPATH: /workspace/server/grpc-gateway-server/log/grpc-service2-server.log
+      LOGPATH: /workspace/grpc-service2-server/logs/grpc-service2-server.log
     command: >
-      go run server/grpc-service2-server/main.go
+      go run grpc-service2-server/main.go
   grpc-gateway-server:
     image: golang:1.14-alpine
     container_name: golang-example-app-grpc-gateway-server
@@ -75,9 +75,9 @@ services:
     networks:
       - golang_example_app
     environment:
-      LOGPATH: /workspace/server/grpc-gateway-server/log/grpc-gateway-server.log
+      LOGPATH: /workspace/grpc-gateway-server/logs/grpc-gateway-server.log
     command: >
-      go run server/grpc-gateway-server/main.go
+      go run grpc-gateway-server/main.go
 networks:
   golang_example_app:
     external: true

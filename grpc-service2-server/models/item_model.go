@@ -3,7 +3,7 @@ package models
 import (
 	"gopkg.in/gorp.v1"
 
-	"github.com/mapserver2007/golang-example-app/server/grpc-service2-server/models/sqls"
+	"github.com/mapserver2007/golang-example-app/grpc-service2-server/models/sqls"
 )
 
 type ItemModel struct {

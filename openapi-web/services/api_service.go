@@ -1,9 +1,9 @@
 package services
 
 import (
-	database "github.com/mapserver2007/golang-example-app/web/common/database"
-	"github.com/mapserver2007/golang-example-app/web/models"
-	openapi "github.com/mapserver2007/golang-example-app/web/openapi/go"
+	database "github.com/mapserver2007/golang-example-app/openapi-web/common/database"
+	"github.com/mapserver2007/golang-example-app/openapi-web/models"
+	openapi "github.com/mapserver2007/golang-example-app/openapi-web/openapi/go"
 	"gopkg.in/gorp.v1"
 )
 
