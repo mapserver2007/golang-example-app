@@ -1,5 +1,7 @@
 # golang-example-app
 
+![build](https://github.com/mapserver2007/golang-example-app/workflows/build/badge.svg)
+
 ## サーバ起動
 ```sh
 $> rake
