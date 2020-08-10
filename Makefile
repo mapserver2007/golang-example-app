@@ -1,4 +1,5 @@
 setup-init:
+	brew install golangci/tap/golangci-lint
 	brew install protobuf
 
 setup:

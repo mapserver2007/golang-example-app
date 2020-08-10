@@ -21,6 +21,8 @@ jobs:
       with:
         version: v1.30
     - name: setup
-      run: make setup
-    - name: Execute lint
-      run: make lint
+      run: go mod download
+    - name: execute lint
+      run: >
+        golangci-lint run
+        goimports -e -d -local github.com ./grpc-*
