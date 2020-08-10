@@ -31,5 +31,7 @@ jobs:
       uses: golangci/golangci-lint-action@v1
       with:
         version: v1.30
+    - name: install goimports
+      run: go get golang.org/x/tools/cmd/goimports
     - name: execute goimports
       run: goimports -e -d -local github.com ./grpc-*
