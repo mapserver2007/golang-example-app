@@ -1,4 +1,4 @@
-// nolint: gochecknoinits, depguard
+// nolint: gochecknoinits
 package log
 
 import (

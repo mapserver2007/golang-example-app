@@ -29,6 +29,8 @@ fmt:
 
 protoc:
 	protoc -I ./proto ./proto/*.proto \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate \
 		--grpc-gateway_out=logtostderr=true,paths=source_relative:./gen/go \
 		--go_out=plugins=grpc,paths=source_relative:./gen/go \
 		--validate_out="lang=go,paths=source_relative:./gen/go"
