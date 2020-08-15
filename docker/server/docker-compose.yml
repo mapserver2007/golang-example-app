@@ -78,6 +78,14 @@ services:
       LOGPATH: /workspace/grpc-gateway-server/logs/grpc-gateway-server.log
     command: >
       go run grpc-gateway-server/main.go
+  saga-log-redis-server:
+    image: redis:5-alpine
+    container_name: golang-example-app-saga-log-redis-server
+    ports:
+      - 16379:6379
+    command: redis-server --requirepass redis
+    networks:
+      - golang_example_app
 networks:
   golang_example_app:
     external: true

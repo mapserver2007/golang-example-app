@@ -3,13 +3,14 @@ package services
 import (
 	"context"
 	"errors"
+	"strconv"
 
 	"google.golang.org/grpc"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/mapserver2007/golang-example-app/common/log"
 	"github.com/mapserver2007/golang-example-app/common/saga"
-	_ "github.com/mapserver2007/golang-example-app/common/saga/storage/memory"
+	_ "github.com/mapserver2007/golang-example-app/common/saga/storage/redis"
 	pb "github.com/mapserver2007/golang-example-app/gen/go"
 )
 
@@ -57,6 +58,10 @@ func (s *MainService) grpcService2Clinet(ctx context.Context, in *empty.Empty) *
 func (s *MainService) execSaga(ctx context.Context) {
 	var sagaId uint64 = 10
 
+	saga.StorageConfig.Redis.Host = "saga-log-redis-server"
+	saga.StorageConfig.Redis.Port = "6379"
+	saga.StorageConfig.Redis.Password = "redis"
+
 	tx := saga.AddSubTxDef("test", sampleAction, sampleCompensate).
 		InitSaga(ctx, sagaId)
 
@@ -77,5 +82,6 @@ func sampleAction(ctx context.Context, name string, age int) error {
 
 func sampleCompensate(ctx context.Context, name string, age int) error {
 	log.Info("compensate")
+	log.Info("param: name:" + name + " age:" + strconv.Itoa(age))
 	return nil
 }

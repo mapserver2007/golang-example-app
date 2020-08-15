@@ -7,17 +7,15 @@ type Storage interface {
 
 	Close() error
 
-	LogIds() ([]string, error)
-
 	Cleanup(logId string) error
-
-	LastLog(logId string) (string, error)
 }
 
 type StorageProvider func(cfg StorageConfig) Storage
 
 type StorageConfig struct {
 	Redis struct {
-		Address string
+		Host     string
+		Port     string
+		Password string
 	}
 }

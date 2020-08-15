@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/sirupsen/logrus"
 )
 
@@ -69,4 +70,10 @@ func Debug(args ...interface{}) {
 
 func Debugf(format string, args ...interface{}) {
 	logrus.Debugf(format, args...)
+}
+
+func Dump(args ...interface{}) {
+	for _, arg := range args {
+		Info(spew.Sdump(arg))
+	}
 }

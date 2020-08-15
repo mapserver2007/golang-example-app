@@ -2,7 +2,6 @@
 package memory
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/mapserver2007/golang-example-app/common/saga"
@@ -17,7 +16,6 @@ func init() {
 		memoryInit.Do(func() {
 			storageInstance = newMemoryStorage()
 		})
-
 		return storageInstance
 	}
 }
@@ -49,29 +47,7 @@ func (s *memoryStorage) Close() error {
 	return nil
 }
 
-func (s *memoryStorage) LogIds() ([]string, error) {
-	ids := make([]string, 0, len(s.data))
-	for id := range s.data {
-		ids = append(ids, id)
-	}
-	return ids, nil
-}
-
 func (s *memoryStorage) Cleanup(logId string) error {
 	delete(s.data, logId)
 	return nil
-}
-
-func (s *memoryStorage) LastLog(logId string) (string, error) {
-	logDataList, ok := s.data[logId]
-	if !ok {
-		return "", errors.New("LogData is not found: " + logId)
-	}
-	logSize := len(logDataList)
-	if logSize == 0 {
-		return "", errors.New("LogData is empty: " + logId)
-	}
-	lastLog := logDataList[logSize-1]
-
-	return lastLog, nil
 }

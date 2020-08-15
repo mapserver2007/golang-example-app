@@ -10,6 +10,8 @@ setup:
 	# db
 	go get -u gopkg.in/gorp.v1
 	go get -u github.com/go-sql-driver/mysql
+	# storage
+	go get -u github.com/gomodule/redigo/redis
 	# grpc
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger

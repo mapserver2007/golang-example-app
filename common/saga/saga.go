@@ -100,6 +100,7 @@ func (s *Saga) EndSaga() {
 // When "Abort" is called, the log is traced backwards and a compensation transaction rollback is started.
 func (s *Saga) Abort() {
 	logs, err := LogStorage().Lookup(s.logId)
+
 	if err != nil {
 		panic("Abort panic")
 	}
