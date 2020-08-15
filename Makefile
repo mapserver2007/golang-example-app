@@ -20,9 +20,11 @@ setup:
 	go get -u gopkg.in/yaml.v2
 	go get -u github.com/sirupsen/logrus
 	go get -u github.com/PuerkitoBio/goquery
+	go get -u github.com/davecgh/go-spew/spew
 
 lint:
 	golangci-lint run
+	goimports -e -d -local github.com ./common
 	goimports -e -d -local github.com ./grpc-*
 
 fmt:

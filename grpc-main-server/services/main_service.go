@@ -2,11 +2,14 @@ package services
 
 import (
 	"context"
+	"errors"
 
 	"google.golang.org/grpc"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/mapserver2007/golang-example-app/common/log"
+	"github.com/mapserver2007/golang-example-app/common/saga"
+	_ "github.com/mapserver2007/golang-example-app/common/saga/storage/memory"
 	pb "github.com/mapserver2007/golang-example-app/gen/go"
 )
 
@@ -14,6 +17,7 @@ type MainService struct {
 }
 
 func (s *MainService) GetUsersAndItems(ctx context.Context, in *empty.Empty) (*pb.GetUsersAndItemsResponse, error) {
+	s.execSaga(ctx)
 	users := s.grpcService1Clinet(ctx, in).Users
 	items := s.grpcService2Clinet(ctx, in).Items
 
@@ -48,4 +52,30 @@ func (s *MainService) grpcService2Clinet(ctx context.Context, in *empty.Empty) *
 	}
 
 	return result
+}
+
+func (s *MainService) execSaga(ctx context.Context) {
+	var sagaId uint64 = 10
+
+	tx := saga.AddSubTxDef("test", sampleAction, sampleCompensate).
+		InitSaga(ctx, sagaId)
+
+	tx.StartSaga().
+		ExecSub("test", "alice", 100). // 若干クセが有る。メソッドは指定しないが引数は指定するのを直したい
+		EndSaga()
+}
+
+func sampleAction(ctx context.Context, name string, age int) error {
+	log.Info("action")
+
+	if name == "alice" {
+		return errors.New("owata")
+	}
+
+	return nil
+}
+
+func sampleCompensate(ctx context.Context, name string, age int) error {
+	log.Info("compensate")
+	return nil
 }
