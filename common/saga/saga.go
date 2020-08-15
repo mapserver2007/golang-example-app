@@ -25,7 +25,6 @@ func LogStorage() storage.Storage {
 }
 
 type Saga struct {
-	id      uint64
 	logId   string
 	context context.Context
 	sec     *ExecutionCoodinator

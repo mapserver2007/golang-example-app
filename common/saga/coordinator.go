@@ -37,10 +37,9 @@ func (e *ExecutionCoodinator) AddSubTxDef(subTxId string, action, compensate int
 
 func (e *ExecutionCoodinator) InitSaga(ctx context.Context, id uint64) *Saga {
 	return &Saga{
-		id:      id,
+		logId:   LogPrefix + strconv.FormatInt(int64(id), 10),
 		context: ctx,
 		sec:     e,
-		logId:   LogPrefix + strconv.FormatInt(int64(id), 10),
 	}
 }
 
