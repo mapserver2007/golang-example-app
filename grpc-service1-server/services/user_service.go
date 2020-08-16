@@ -34,6 +34,8 @@ func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.Get
 func (s *UserService) GetUsers(ctx context.Context, in *empty.Empty) (*pb.GetUsersResponse, error) {
 	db := models.User{Connection: s.Connection}
 	rows, err := db.FindAll()
+	tx := newSagaService(ctx, "grpc-service1-server")
+	tx.subTx()
 
 	if err != nil {
 		log.Error(err)

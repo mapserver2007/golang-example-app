@@ -24,6 +24,10 @@ func NewSagaExecutionCoordinator() ExecutionCoodinator {
 	}
 }
 
+func CreateSubTx(ctx context.Context, serverId string, id uint64) *Saga {
+	return DefaultSagaExecutionCoordinator.CreateSubTx(ctx, serverId, id)
+}
+
 func AddSubTxDef(subTxId string, action, compensate interface{}) *ExecutionCoodinator {
 	return DefaultSagaExecutionCoordinator.AddSubTxDef(subTxId, action, compensate)
 }
@@ -35,11 +39,12 @@ func (e *ExecutionCoodinator) AddSubTxDef(subTxId string, action, compensate int
 	return e
 }
 
-func (e *ExecutionCoodinator) InitSaga(ctx context.Context, id uint64) *Saga {
+func (e *ExecutionCoodinator) CreateSubTx(ctx context.Context, serverId string, id uint64) *Saga {
 	return &Saga{
-		logId:   LogPrefix + strconv.FormatInt(int64(id), 10),
-		context: ctx,
-		sec:     e,
+		logId:    LogPrefix + strconv.FormatInt(int64(id), 10),
+		serverId: serverId,
+		context:  ctx,
+		sec:      e,
 	}
 }
 

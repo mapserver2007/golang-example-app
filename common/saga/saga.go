@@ -25,15 +25,17 @@ func LogStorage() storage.Storage {
 }
 
 type Saga struct {
-	logId   string
-	context context.Context
-	sec     *ExecutionCoodinator
+	logId    string
+	serverId string
+	context  context.Context
+	sec      *ExecutionCoodinator
 }
 
 func (s *Saga) StartSaga() *Saga {
 	log := &Log{
-		Type: SagaStart,
-		Time: time.Now(),
+		Type:     SagaStart,
+		ServerId: s.serverId,
+		Time:     time.Now(),
 	}
 	err := LogStorage().AppendLog(s.logId, log.mustMarshal())
 	if err != nil {
@@ -45,10 +47,11 @@ func (s *Saga) StartSaga() *Saga {
 func (s *Saga) ExecSub(subTxId string, args ...interface{}) *Saga {
 	subTxDef := s.sec.MustFindSubTxDef(subTxId)
 	log := &Log{
-		Type:    ActionStart,
-		SubTxId: subTxId,
-		Time:    time.Now(),
-		Params:  MarshalParam(s.sec, args),
+		Type:     ActionStart,
+		ServerId: s.serverId,
+		SubTxId:  subTxId,
+		Time:     time.Now(),
+		Params:   MarshalParam(s.sec, args),
 	}
 	err := LogStorage().AppendLog(s.logId, log.mustMarshal())
 	if err != nil {
@@ -69,9 +72,10 @@ func (s *Saga) ExecSub(subTxId string, args ...interface{}) *Saga {
 	}
 
 	log = &Log{
-		Type:    ActionEnd,
-		SubTxId: subTxId,
-		Time:    time.Now(),
+		Type:     ActionEnd,
+		ServerId: s.serverId,
+		SubTxId:  subTxId,
+		Time:     time.Now(),
 	}
 	err = LogStorage().AppendLog(s.logId, log.mustMarshal())
 	if err != nil {
@@ -83,16 +87,13 @@ func (s *Saga) ExecSub(subTxId string, args ...interface{}) *Saga {
 
 func (s *Saga) EndSaga() {
 	log := &Log{
-		Type: SagaEnd,
-		Time: time.Now(),
+		Type:     SagaEnd,
+		ServerId: s.serverId,
+		Time:     time.Now(),
 	}
 	err := LogStorage().AppendLog(s.logId, log.mustMarshal())
 	if err != nil {
 		panic("Add log failure")
-	}
-	err = LogStorage().Cleanup(s.logId)
-	if err != nil {
-		panic("Clean up topic failure")
 	}
 }
 
@@ -104,8 +105,9 @@ func (s *Saga) Abort() {
 		panic("Abort panic")
 	}
 	abortLog := &Log{
-		Type: SagaAbort,
-		Time: time.Now(),
+		Type:     SagaAbort,
+		ServerId: s.serverId,
+		Time:     time.Now(),
 	}
 	err = LogStorage().AppendLog(s.logId, abortLog.mustMarshal())
 	if err != nil {
@@ -115,16 +117,17 @@ func (s *Saga) Abort() {
 		logStr := logs[i]
 		log := mustUnmarshalLog(logStr)
 		if log.Type == ActionStart {
-			s.compensate(log)
+			s.compensate(&log)
 		}
 	}
 }
 
-func (s *Saga) compensate(txLog Log) {
+func (s *Saga) compensate(txLog *Log) {
 	cLog := &Log{
-		Type:    CompensateStart,
-		SubTxId: txLog.SubTxId,
-		Time:    time.Now(),
+		Type:     CompensateStart,
+		ServerId: s.serverId,
+		SubTxId:  txLog.SubTxId,
+		Time:     time.Now(),
 	}
 	err := LogStorage().AppendLog(s.logId, cLog.mustMarshal())
 	if err != nil {
@@ -145,9 +148,10 @@ func (s *Saga) compensate(txLog Log) {
 	}
 
 	cLog = &Log{
-		Type:    CompensateEnd,
-		SubTxId: txLog.SubTxId,
-		Time:    time.Now(),
+		Type:     CompensateEnd,
+		ServerId: s.serverId,
+		SubTxId:  txLog.SubTxId,
+		Time:     time.Now(),
 	}
 	err = LogStorage().AppendLog(s.logId, cLog.mustMarshal())
 	if err != nil {
