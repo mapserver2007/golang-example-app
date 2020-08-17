@@ -24,6 +24,15 @@ func (s *MainService) GetUsersAndItems(ctx context.Context, in *empty.Empty) (*p
 	return &pb.GetUsersAndItemsResponse{Users: users, Items: items}, nil
 }
 
+func (s *MainService) PostUsersAndItems(ctx context.Context, in *pb.PostUsersAndItemsRequest) (*pb.SimpleApiResponse, error) {
+	var req1 pb.PostUsersRequest
+	req1.Users = in.Users
+	res1 := s.grpcService1PostUsers(ctx, &req1)
+	log.Info(res1)
+
+	return &pb.SimpleApiResponse{Status: 200}, nil
+}
+
 func (s *MainService) grpcService1Clinet(ctx context.Context, in *empty.Empty) *pb.GetUsersResponse {
 	// TODO insecureを直す、inはenptyだとだめなのでinterfaceとかで受ける
 	conn, _ := grpc.Dial("grpc-service1-server:4003", grpc.WithInsecure())
@@ -54,32 +63,16 @@ func (s *MainService) grpcService2Clinet(ctx context.Context, in *empty.Empty) *
 	return result
 }
 
-// // TODO このIDはトランザクション内で共有する値
-// var sagaId uint64 = 10
+func (s *MainService) grpcService1PostUsers(ctx context.Context, in *pb.PostUsersRequest) *pb.SimpleApiResponse {
+	conn, _ := grpc.Dial("grpc-service1-server:4003", grpc.WithInsecure())
+	defer conn.Close()
+	c := pb.NewUserServiceClient(conn)
 
-// saga.StorageConfig.Redis.Host = "saga-log-redis-server"
-// saga.StorageConfig.Redis.Port = "6379"
-// saga.StorageConfig.Redis.Password = "redis"
+	result, err := c.PostUsers(ctx, in)
+	if err != nil {
+		log.Error(err)
+		return &pb.SimpleApiResponse{Status: 500}
+	}
 
-// tx := saga.AddSubTxDef("test", s.sampleAction, s.sampleCompensate).
-// 	CreateSubTx(ctx, sagaId)
-
-// tx.StartSaga().
-// 	ExecSub("test", "alice", 100). // 若干クセが有る。メソッドは指定しないが引数は指定するのを直したい
-// 	EndSaga()
-
-// func (s *MainService) sampleAction(ctx context.Context, name string, age int) error {
-// 	log.Info("action")
-
-// 	if name == "alice" {
-// 		return errors.New("owata")
-// 	}
-
-// 	return nil
-// }
-
-// func (s *MainService) sampleCompensate(ctx context.Context, name string, age int) error {
-// 	log.Info("compensate")
-// 	log.Info("param: name:" + name + " age:" + strconv.Itoa(age))
-// 	return nil
-// }
+	return result
+}

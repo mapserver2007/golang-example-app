@@ -30,6 +30,7 @@ lint:
 	goimports -e -d -local github.com ./grpc-*
 
 fmt:
+	goimports -e -d -local github.com ./common
 	goimports -e -d -local github.com ./grpc-*
 
 protoc:

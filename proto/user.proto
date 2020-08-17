@@ -4,9 +4,7 @@ package example;
 option go_package = "go;proto";
 
 import "google/protobuf/empty.proto";
-// import "google/api/annotations.proto";
 import "validate/validate.proto";
-// import "item.proto";
 
 message GetUserRequest {
   string id = 1;
@@ -30,6 +28,10 @@ message PostUserRequest {
   int32 age = 2 [(validate.rules).int32.gt = 0];
 }
 
+message PostUsersRequest {
+  repeated PostUserRequest users = 1;
+}
+
 message PutUserRequest {
   string id = 1;
   string name = 2;
@@ -43,6 +45,7 @@ message SimpleApiResponse {
 service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
   rpc GetUsers (google.protobuf.Empty) returns (GetUsersResponse);
+  rpc PostUsers (PostUsersRequest) returns (SimpleApiResponse);
 }
 
 // service GetUsersService {

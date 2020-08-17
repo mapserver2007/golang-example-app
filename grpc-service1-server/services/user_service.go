@@ -34,8 +34,6 @@ func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.Get
 func (s *UserService) GetUsers(ctx context.Context, in *empty.Empty) (*pb.GetUsersResponse, error) {
 	db := models.User{Connection: s.Connection}
 	rows, err := db.FindAll()
-	tx := newSagaService(ctx, "grpc-service1-server")
-	tx.subTx()
 
 	if err != nil {
 		log.Error(err)
@@ -47,4 +45,12 @@ func (s *UserService) GetUsers(ctx context.Context, in *empty.Empty) (*pb.GetUse
 		users = append(users, &pb.GetUserResponse{Name: row.Name, Age: row.Age})
 	}
 	return &pb.GetUsersResponse{Users: users}, nil
+}
+
+func (s *UserService) PostUsers(ctx context.Context, in *pb.PostUsersRequest) (*pb.SimpleApiResponse, error) {
+	// TODO
+	tx := newSagaService(ctx, "grpc-service1-server", s.Connection)
+	tx.createUserSubTx(in)
+
+	return &pb.SimpleApiResponse{Status: 200}, nil
 }

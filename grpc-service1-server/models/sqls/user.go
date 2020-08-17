@@ -22,6 +22,29 @@ WHERE
 `
 }
 
+func CreateUser() string {
+	return `
+INSERT INTO users(
+	name,
+	age
+)
+VALUES(
+	?,
+	?
+)
+`
+}
+
+func CreateUserCompensate() string {
+	return `
+DELETE
+FROM
+	users
+WHERE
+	id = ?
+`
+}
+
 func UpdateByUserId() string {
 	return `
 UPDATE

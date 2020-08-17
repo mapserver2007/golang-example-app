@@ -340,6 +340,86 @@ var _ interface {
 
 var _PostUserRequest_Name_Pattern = regexp.MustCompile("^[a-zA-Z0-9\\s]+$")
 
+// Validate checks the field values on PostUsersRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, an
+// error is returned.
+func (m *PostUsersRequest) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetUsers() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PostUsersRequestValidationError{
+					field:  fmt.Sprintf("Users[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// PostUsersRequestValidationError is the validation error returned by
+// PostUsersRequest.Validate if the designated constraints aren't met.
+type PostUsersRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PostUsersRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PostUsersRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PostUsersRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PostUsersRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PostUsersRequestValidationError) ErrorName() string { return "PostUsersRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PostUsersRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPostUsersRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PostUsersRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PostUsersRequestValidationError{}
+
 // Validate checks the field values on PutUserRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, an error
 // is returned.

@@ -4,8 +4,7 @@ package example;
 option go_package = "go;proto";
 
 import "google/protobuf/empty.proto";
-// import "google/api/annotations.proto";
-// import "validate/validate.proto";
+import "validate/validate.proto";
 
 message GetItemRequest {
   string id = 1;
@@ -18,6 +17,15 @@ message GetItemResponse {
 
 message GetItemsResponse {
   repeated GetItemResponse items = 1;
+}
+
+message PostItemRequest {
+  string name = 1 [(validate.rules).string = {
+    min_len: 1,
+    max_len: 30,
+    pattern: "^[a-zA-Z0-9\\s]+$"
+  }];
+  int32 price = 2 [(validate.rules).int32.gt = 0];
 }
 
 service ItemService {

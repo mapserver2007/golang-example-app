@@ -13,10 +13,22 @@ message GetUsersAndItemsResponse {
   repeated GetItemResponse items = 2;
 }
 
+message PostUsersAndItemsRequest {
+  repeated PostUserRequest users = 1;
+  repeated PostItemRequest items = 2;
+}
+
 service MainService {
   rpc GetUsersAndItems (google.protobuf.Empty) returns (GetUsersAndItemsResponse) {
     option (google.api.http) = {
       get: "/v1/users_and_items"
+    };
+  }
+
+  rpc PostUsersAndItems (PostUsersAndItemsRequest) returns (SimpleApiResponse) {
+    option (google.api.http) = {
+      post: "/v1/users_and_items"
+      body: "*"
     };
   }
 }

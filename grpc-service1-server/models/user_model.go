@@ -31,18 +31,24 @@ func (db *User) FindById(id int32) (UserModel, error) {
 	return result, err
 }
 
-func (db *User) CreateUser(request *pb.PostUserRequest) (err error) {
+func (db *User) CreateUser(param *pb.PostUserRequest) (sql.Result, error) {
 	db.Connection.AddTableWithName(UserModel{}, "users")
-	_, err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
-		user := UserModel{Name: request.Name, Age: request.Age}
-		return nil, tran.Insert(&user)
+	result, err := database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
+		return tran.Exec(sqls.CreateUser(), param.Name, param.Age)
 	})
-	return
+	return result, err
 }
 
-func (db *User) UpdateUser(request *pb.PutUserRequest) (result sql.Result, err error) {
-	result, err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
-		return tran.Exec(sqls.UpdateByUserId(), request.Name, request.Age, request.Id)
+func (db *User) CreateUserCompensate(id int64) error {
+	_, err := database.TransactionScope(db.Connection, func(tran *gorp.Transaction) error {
+		return tran.Exec(sqls.CreateUserCompensate(), id)
 	})
-	return
+	return err
+}
+
+func (db *User) UpdateUser(param *pb.PutUserRequest) (sql.Result, error) {
+	result, err = database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
+		return tran.Exec(sqls.UpdateByUserId(), param.Name, param.Age, param.Id)
+	})
+	return result, err
 }

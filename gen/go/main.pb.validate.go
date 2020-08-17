@@ -132,3 +132,100 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUsersAndItemsResponseValidationError{}
+
+// Validate checks the field values on PostUsersAndItemsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *PostUsersAndItemsRequest) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetUsers() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PostUsersAndItemsRequestValidationError{
+					field:  fmt.Sprintf("Users[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PostUsersAndItemsRequestValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// PostUsersAndItemsRequestValidationError is the validation error returned by
+// PostUsersAndItemsRequest.Validate if the designated constraints aren't met.
+type PostUsersAndItemsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PostUsersAndItemsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PostUsersAndItemsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PostUsersAndItemsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PostUsersAndItemsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PostUsersAndItemsRequestValidationError) ErrorName() string {
+	return "PostUsersAndItemsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PostUsersAndItemsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPostUsersAndItemsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PostUsersAndItemsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PostUsersAndItemsRequestValidationError{}
