@@ -7,7 +7,6 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/mapserver2007/golang-example-app/common/log"
-	_ "github.com/mapserver2007/golang-example-app/common/saga/storage/redis"
 	pb "github.com/mapserver2007/golang-example-app/gen/go"
 )
 
@@ -25,10 +24,27 @@ func (s *MainService) GetUsersAndItems(ctx context.Context, in *empty.Empty) (*p
 }
 
 func (s *MainService) PostUsersAndItems(ctx context.Context, in *pb.PostUsersAndItemsRequest) (*pb.SimpleApiResponse, error) {
-	var req1 pb.PostUsersRequest
+	var (
+		req1 pb.PostUsersRequest
+		req2 pb.PostItemsRequest
+	)
 	req1.Users = in.Users
-	res1 := s.grpcService1PostUsers(ctx, &req1)
-	log.Info(res1)
+	req2.Items = in.Items
+
+	tx := newSagaService(ctx, "grpc-main-server")
+	tx.start()
+
+	var err error
+	if err = s.grpcService1PostUsers(ctx, &req1); err != nil {
+		log.Error(err)
+		return &pb.SimpleApiResponse{Status: 500}, nil
+	}
+	if err = s.grpcService2PostItems(ctx, &req2); err != nil {
+		log.Error(err)
+		return &pb.SimpleApiResponse{Status: 500}, nil
+	}
+
+	tx.end()
 
 	return &pb.SimpleApiResponse{Status: 200}, nil
 }
@@ -63,16 +79,20 @@ func (s *MainService) grpcService2Clinet(ctx context.Context, in *empty.Empty) *
 	return result
 }
 
-func (s *MainService) grpcService1PostUsers(ctx context.Context, in *pb.PostUsersRequest) *pb.SimpleApiResponse {
+func (s *MainService) grpcService1PostUsers(ctx context.Context, in *pb.PostUsersRequest) error {
 	conn, _ := grpc.Dial("grpc-service1-server:4003", grpc.WithInsecure())
 	defer conn.Close()
 	c := pb.NewUserServiceClient(conn)
+	_, err := c.PostUsers(ctx, in)
 
-	result, err := c.PostUsers(ctx, in)
-	if err != nil {
-		log.Error(err)
-		return &pb.SimpleApiResponse{Status: 500}
-	}
+	return err
+}
 
-	return result
+func (s *MainService) grpcService2PostItems(ctx context.Context, in *pb.PostItemsRequest) error {
+	conn, _ := grpc.Dial("grpc-service2-server:4004", grpc.WithInsecure())
+	defer conn.Close()
+	c := pb.NewItemServiceClient(conn)
+	_, err := c.PostItems(ctx, in)
+
+	return err
 }

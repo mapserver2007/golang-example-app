@@ -48,7 +48,6 @@ func (s *UserService) GetUsers(ctx context.Context, in *empty.Empty) (*pb.GetUse
 }
 
 func (s *UserService) PostUsers(ctx context.Context, in *pb.PostUsersRequest) (*pb.SimpleApiResponse, error) {
-	// TODO
 	tx := newSagaService(ctx, "grpc-service1-server", s.Connection)
 	tx.createUserSubTx(in)
 

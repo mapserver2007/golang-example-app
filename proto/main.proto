@@ -5,6 +5,7 @@ option go_package = "go;proto";
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
+import "common.proto";
 import "user.proto";
 import "item.proto";
 

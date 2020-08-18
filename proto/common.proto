@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package example;
+option go_package = "go;proto";
+
+message SimpleApiResponse {
+    int32 status = 1;
+  }

@@ -36,6 +36,11 @@ func (e *ExecutionCoodinator) AddSubTxDef(subTxId string, action, compensate int
 	e.paramTypeRegister.addParams(action)
 	e.paramTypeRegister.addParams(compensate)
 	e.subTxDefinitions.addDefinition(subTxId, action, compensate)
+
+	// TODO
+	// compensateするときに戻されるのは当然当該のサーバでaddDefinitionされたもののみなので、
+	// 他サーバで定義したものは取り出せないのに、一気に打ち消しに行こうとするためdefinition not foundになる。
+
 	return e
 }
 

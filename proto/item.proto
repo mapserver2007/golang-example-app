@@ -3,6 +3,7 @@ syntax = "proto3";
 package example;
 option go_package = "go;proto";
 
+import "common.proto";
 import "google/protobuf/empty.proto";
 import "validate/validate.proto";
 
@@ -28,9 +29,14 @@ message PostItemRequest {
   int32 price = 2 [(validate.rules).int32.gt = 0];
 }
 
+message PostItemsRequest {
+  repeated PostItemRequest items = 1;
+}
+
 service ItemService {
   rpc GetItem (GetItemRequest) returns (GetItemResponse);
   rpc GetItems (google.protobuf.Empty) returns (GetItemsResponse);
+  rpc PostItems (PostItemsRequest) returns (SimpleApiResponse);
 }
 
 // service GetItemsService {

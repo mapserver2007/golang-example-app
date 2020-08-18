@@ -339,3 +339,83 @@ var _ interface {
 } = PostItemRequestValidationError{}
 
 var _PostItemRequest_Name_Pattern = regexp.MustCompile("^[a-zA-Z0-9\\s]+$")
+
+// Validate checks the field values on PostItemsRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, an
+// error is returned.
+func (m *PostItemsRequest) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PostItemsRequestValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// PostItemsRequestValidationError is the validation error returned by
+// PostItemsRequest.Validate if the designated constraints aren't met.
+type PostItemsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PostItemsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PostItemsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PostItemsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PostItemsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PostItemsRequestValidationError) ErrorName() string { return "PostItemsRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PostItemsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPostItemsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PostItemsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PostItemsRequestValidationError{}

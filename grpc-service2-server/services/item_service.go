@@ -46,3 +46,10 @@ func (s *ItemService) GetItems(ctx context.Context, _ *empty.Empty) (*pb.GetItem
 	}
 	return &pb.GetItemsResponse{Items: items}, nil
 }
+
+func (s *ItemService) PostItems(ctx context.Context, in *pb.PostItemsRequest) (*pb.SimpleApiResponse, error) {
+	tx := newSagaService(ctx, "grpc-service2-server", s.Connection)
+	tx.createItemSubTx(in)
+
+	return &pb.SimpleApiResponse{Status: 200}, nil
+}

@@ -8,6 +8,7 @@ import (
 
 	"golang.org/x/net/context"
 
+	appLog "github.com/mapserver2007/golang-example-app/common/log"
 	"github.com/mapserver2007/golang-example-app/common/saga/storage"
 )
 
@@ -41,6 +42,10 @@ func (s *Saga) StartSaga() *Saga {
 	if err != nil {
 		panic("Add log failure")
 	}
+
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga log: " + log.mustMarshal())
+
 	return s
 }
 
@@ -57,6 +62,10 @@ func (s *Saga) ExecSub(subTxId string, args ...interface{}) *Saga {
 	if err != nil {
 		panic("Add log failure")
 	}
+
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga SubTxId: " + subTxId)
+	appLog.Info("saga log: " + log.mustMarshal())
 
 	// Create parameters for executing the reflection method
 	params := make([]reflect.Value, 0, len(args)+1)
@@ -82,6 +91,10 @@ func (s *Saga) ExecSub(subTxId string, args ...interface{}) *Saga {
 		panic("Add log failure")
 	}
 
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga SubTxId: " + subTxId)
+	appLog.Info("saga log: " + log.mustMarshal())
+
 	return s
 }
 
@@ -95,6 +108,9 @@ func (s *Saga) EndSaga() {
 	if err != nil {
 		panic("Add log failure")
 	}
+
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga log: " + log.mustMarshal())
 }
 
 // When "Abort" is called, the log is traced backwards and a compensation transaction rollback is started.
@@ -113,6 +129,10 @@ func (s *Saga) Abort() {
 	if err != nil {
 		panic("Add log failure")
 	}
+
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga log: " + abortLog.mustMarshal())
+
 	for i := len(logs) - 1; i >= 0; i-- {
 		logStr := logs[i]
 		log := mustUnmarshalLog(logStr)
@@ -133,6 +153,10 @@ func (s *Saga) compensate(txLog *Log) {
 	if err != nil {
 		panic("Add log failure")
 	}
+
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga SubTxId: " + txLog.SubTxId)
+	appLog.Info("saga log: " + cLog.mustMarshal())
 
 	args := UnmarshalParam(s.sec, txLog.Params)
 	params := make([]reflect.Value, 0, len(args)+1)
@@ -157,4 +181,8 @@ func (s *Saga) compensate(txLog *Log) {
 	if err != nil {
 		panic("Add log failure")
 	}
+
+	appLog.Info("saga logId: " + s.logId)
+	appLog.Info("saga SubTxId: " + txLog.SubTxId)
+	appLog.Info("saga log: " + cLog.mustMarshal())
 }
