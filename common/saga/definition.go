@@ -1,13 +1,9 @@
 package saga
 
 import (
-	"bytes"
-	"encoding/gob"
 	"reflect"
 
 	"golang.org/x/net/context"
-
-	"github.com/mapserver2007/golang-example-app/common/log"
 )
 
 type subTxDefinitions map[string]subTxDefinition
@@ -22,15 +18,11 @@ func (s subTxDefinitions) addDefinition(subTxId string, action, compensate inter
 	actionMethod := subTxMethod(action)
 	compensateMethod := subTxMethod(compensate)
 
-	// TODO ここでストレージ保存しかなさそう
 	s[subTxId] = subTxDefinition{
 		subTxId:    subTxId,
 		action:     actionMethod,
 		compensate: compensateMethod,
 	}
-
-	ttt := s.mustMarshal(s[subTxId])
-	log.Info(ttt)
 
 	return s
 }
@@ -38,26 +30,6 @@ func (s subTxDefinitions) addDefinition(subTxId string, action, compensate inter
 func (s subTxDefinitions) findDefinition(subTxId string) (subTxDefinition, bool) {
 	define, ok := s[subTxId]
 	return define, ok
-}
-
-func (s subTxDefinitions) mustMarshal(value subTxDefinition) []byte {
-	buf := bytes.NewBuffer(nil)
-	err := gob.NewEncoder(buf).Encode(&value)
-	if err != nil {
-		log.Error(err)
-		panic("Marshal Failure")
-	}
-	return buf.Bytes()
-}
-
-func (s subTxDefinitions) mustUnmarshal(data []byte) *subTxDefinition {
-	var obj subTxDefinition
-	buf := bytes.NewBuffer(data)
-	err := gob.NewDecoder(buf).Decode(&obj)
-	if err != nil {
-		panic("Unmarshal Failure")
-	}
-	return &obj
 }
 
 type paramTypeRegister struct {

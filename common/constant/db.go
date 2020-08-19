@@ -1,8 +1,10 @@
 package constant
 
-const DBMS = "mysql"
-const DBUserId = "mariadb"
-const DBPassword = "mariadb"
-const DBHost = "godb"
-const DBPort = "3306"
-const DBName = "godb"
+const (
+	DBMS       = "mysql"
+	DBUserId   = "mariadb"
+	DBPassword = "mariadb"
+	DBHost     = "godb"
+	DBPort     = "3306"
+	DBName     = "godb"
+)
