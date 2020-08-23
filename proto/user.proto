@@ -31,6 +31,7 @@ message PostUserRequest {
 
 message PostUsersRequest {
   repeated PostUserRequest users = 1;
+  string uuid = 2;
 }
 
 message PutUserRequest {

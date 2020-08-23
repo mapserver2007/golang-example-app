@@ -31,6 +31,7 @@ message PostItemRequest {
 
 message PostItemsRequest {
   repeated PostItemRequest items = 1;
+  string uuid = 2;
 }
 
 service ItemService {
@@ -38,17 +39,3 @@ service ItemService {
   rpc GetItems (google.protobuf.Empty) returns (GetItemsResponse);
   rpc PostItems (PostItemsRequest) returns (SimpleApiResponse);
 }
-
-// service GetItemsService {
-//   rpc GetItem (GetItemRequest) returns (GetItemResponse) {
-//     option (google.api.http) = {
-//       get: "/v1/item/{id}"
-//     };
-//   }
-
-//   rpc GetItems (google.protobuf.Empty) returns (GetItemsResponse) {
-//     option (google.api.http) = {
-//       get: "/v1/items"
-//     };
-//   }
-// }

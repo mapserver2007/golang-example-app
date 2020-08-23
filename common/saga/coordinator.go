@@ -2,7 +2,6 @@ package saga
 
 import (
 	"reflect"
-	"strconv"
 
 	"golang.org/x/net/context"
 	"gopkg.in/gorp.v1"
@@ -25,7 +24,7 @@ func NewSagaExecutionCoordinator() ExecutionCoodinator {
 	}
 }
 
-func CreateSubTx(ctx context.Context, conn *gorp.DbMap, serverId string, id uint64) *Saga {
+func CreateSubTx(ctx context.Context, conn *gorp.DbMap, serverId, id string) *Saga {
 	return DefaultSagaExecutionCoordinator.CreateSubTx(ctx, conn, serverId, id)
 }
 
@@ -41,9 +40,9 @@ func (e *ExecutionCoodinator) AddSubTxDef(subTxId string, action, compensate int
 	return e
 }
 
-func (e *ExecutionCoodinator) CreateSubTx(ctx context.Context, conn *gorp.DbMap, serverId string, id uint64) *Saga {
+func (e *ExecutionCoodinator) CreateSubTx(ctx context.Context, conn *gorp.DbMap, serverId, id string) *Saga {
 	return &Saga{
-		logId:    LogPrefix + strconv.FormatInt(int64(id), 10),
+		logId:    LogPrefix + id,
 		serverId: serverId,
 		context:  ctx,
 		conn:     conn,

@@ -363,6 +363,8 @@ func (m *PostItemsRequest) Validate() error {
 
 	}
 
+	// no validation rules for Uuid
+
 	return nil
 }
 

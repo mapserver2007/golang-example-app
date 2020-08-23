@@ -23,6 +23,7 @@ setup:
 	go get -u github.com/sirupsen/logrus
 	go get -u github.com/PuerkitoBio/goquery
 	go get -u github.com/davecgh/go-spew/spew
+	go get -u github.com/google/uuid
 
 lint:
 	golangci-lint run

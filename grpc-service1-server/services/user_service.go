@@ -39,10 +39,8 @@ func newSagaService(ctx context.Context, serverId string) *sagaService {
 }
 
 func (s *sagaService) createSubTx(in *pb.PostUsersRequest, conn *gorp.DbMap) {
-	// TODO メインサーバで発行、headerで引き回したい
-	var sagaId uint64 = 10
 	subtx.SubTxDefinitions.
-		CreateSubTx(s.ctx, conn, s.serverId, sagaId).
+		CreateSubTx(s.ctx, conn, s.serverId, in.Uuid).
 		ExecSub("createUser", in.Users)
 }
 
