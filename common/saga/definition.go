@@ -33,31 +33,39 @@ func (s subTxDefinitions) findDefinition(subTxId string) (subTxDefinition, bool)
 }
 
 type paramTypeRegister struct {
-	nameToType map[string]reflect.Type
-	typeToName map[reflect.Type]string
+	nameToType map[string]map[string]reflect.Type
+	typeToName map[string]map[reflect.Type]string
 }
 
-func (r *paramTypeRegister) addParams(f interface{}) {
+func (r *paramTypeRegister) addParams(subTxId string, f interface{}) {
+	var ok bool
+	if _, ok = r.nameToType[subTxId]; !ok {
+		r.nameToType[subTxId] = make(map[string]reflect.Type)
+	}
+	if _, ok = r.typeToName[subTxId]; !ok {
+		r.typeToName[subTxId] = make(map[reflect.Type]string)
+	}
+
 	funcValue := subTxMethod(f)
 	funcType := funcValue.Type()
 	for i := 0; i < funcType.NumIn(); i++ {
 		paramType := funcType.In(i)
-		r.nameToType[paramType.Name()] = paramType
-		r.typeToName[paramType] = paramType.Name()
+		r.nameToType[subTxId][paramType.Name()] = paramType
+		r.typeToName[subTxId][paramType] = paramType.Name()
 	}
 	for i := 0; i < funcType.NumOut(); i++ {
 		returnType := funcType.Out(i)
-		r.nameToType[returnType.Name()] = returnType
+		r.nameToType[subTxId][returnType.Name()] = returnType
 	}
 }
 
-func (r *paramTypeRegister) findTypeName(typ reflect.Type) (string, bool) {
-	f, ok := r.typeToName[typ]
+func (r *paramTypeRegister) findTypeName(subTxId string, typ reflect.Type) (string, bool) {
+	f, ok := r.typeToName[subTxId][typ]
 	return f, ok
 }
 
-func (r *paramTypeRegister) findType(typeName string) (reflect.Type, bool) {
-	f, ok := r.nameToType[typeName]
+func (r *paramTypeRegister) findType(subTxId, typeName string) (reflect.Type, bool) {
+	f, ok := r.nameToType[subTxId][typeName]
 	return f, ok
 }
 

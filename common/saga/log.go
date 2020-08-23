@@ -18,11 +18,12 @@ const (
 )
 
 type Log struct {
-	Type     LogType     `json:"type,omitempty"`
-	ServerId string      `json:"serverId,omitempty"`
-	SubTxId  string      `json:"subTxId,omitempty"`
-	Time     time.Time   `json:"time,omitempty"`
-	Params   []ParamData `json:"params,omitempty"`
+	Type         LogType     `json:"type,omitempty"`
+	ServerId     string      `json:"serverId,omitempty"`
+	SubTxId      string      `json:"subTxId,omitempty"`
+	Time         time.Time   `json:"time,omitempty"`
+	Params       []ParamData `json:"params,omitempty"`
+	ResultParams []int64     `json:"resultParams,omitempty"`
 }
 
 func (l *Log) mustMarshal() string {

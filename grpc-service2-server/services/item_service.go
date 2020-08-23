@@ -2,18 +2,48 @@ package services
 
 import (
 	"context"
+	"database/sql"
 	"strconv"
 
 	"gopkg.in/gorp.v1"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/mapserver2007/golang-example-app/common/constant"
 	"github.com/mapserver2007/golang-example-app/common/log"
+	"github.com/mapserver2007/golang-example-app/common/saga"
 	pb "github.com/mapserver2007/golang-example-app/gen/go"
 	"github.com/mapserver2007/golang-example-app/grpc-service2-server/models"
+	"github.com/mapserver2007/golang-example-app/subtx"
 )
 
 type ItemService struct {
 	Connection *gorp.DbMap
+}
+
+type sagaService struct {
+	ctx          context.Context
+	serverId     string
+	actionResult map[string][]sql.Result
+}
+
+func newSagaService(ctx context.Context, serverId string) *sagaService {
+	saga.StorageConfig.Redis.Host = constant.SagaLogServerHost
+	saga.StorageConfig.Redis.Port = constant.SagaLogServerPort
+	saga.StorageConfig.Redis.Password = constant.SagaLogServerPassword
+
+	return &sagaService{
+		ctx:          ctx,
+		serverId:     serverId,
+		actionResult: map[string][]sql.Result{},
+	}
+}
+
+func (s *sagaService) createSubTx(in *pb.PostItemsRequest, conn *gorp.DbMap) {
+	// TODO メインサーバで発行、headerで引き回したい
+	var sagaId uint64 = 10
+	subtx.SubTxDefinitions.
+		CreateSubTx(s.ctx, conn, s.serverId, sagaId).
+		ExecSub("createItem", in.Items)
 }
 
 func (s *ItemService) GetItem(ctx context.Context, in *pb.GetItemRequest) (*pb.GetItemResponse, error) {
@@ -48,8 +78,8 @@ func (s *ItemService) GetItems(ctx context.Context, _ *empty.Empty) (*pb.GetItem
 }
 
 func (s *ItemService) PostItems(ctx context.Context, in *pb.PostItemsRequest) (*pb.SimpleApiResponse, error) {
-	tx := newSagaService(ctx, "grpc-service2-server", s.Connection)
-	tx.createItemSubTx(in)
+	tx := newSagaService(ctx, "grpc-service2-server")
+	tx.createSubTx(in, s.Connection)
 
 	return &pb.SimpleApiResponse{Status: 200}, nil
 }

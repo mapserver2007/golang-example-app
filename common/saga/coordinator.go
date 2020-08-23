@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"golang.org/x/net/context"
+	"gopkg.in/gorp.v1"
 )
 
 var DefaultSagaExecutionCoordinator = NewSagaExecutionCoordinator()
@@ -18,14 +19,14 @@ func NewSagaExecutionCoordinator() ExecutionCoodinator {
 	return ExecutionCoodinator{
 		subTxDefinitions: make(subTxDefinitions),
 		paramTypeRegister: &paramTypeRegister{
-			nameToType: make(map[string]reflect.Type),
-			typeToName: make(map[reflect.Type]string),
+			nameToType: make(map[string]map[string]reflect.Type),
+			typeToName: make(map[string]map[reflect.Type]string),
 		},
 	}
 }
 
-func CreateSubTx(ctx context.Context, serverId string, id uint64) *Saga {
-	return DefaultSagaExecutionCoordinator.CreateSubTx(ctx, serverId, id)
+func CreateSubTx(ctx context.Context, conn *gorp.DbMap, serverId string, id uint64) *Saga {
+	return DefaultSagaExecutionCoordinator.CreateSubTx(ctx, conn, serverId, id)
 }
 
 func AddSubTxDef(subTxId string, action, compensate interface{}) *ExecutionCoodinator {
@@ -33,36 +34,33 @@ func AddSubTxDef(subTxId string, action, compensate interface{}) *ExecutionCoodi
 }
 
 func (e *ExecutionCoodinator) AddSubTxDef(subTxId string, action, compensate interface{}) *ExecutionCoodinator {
-	e.paramTypeRegister.addParams(action)
-	e.paramTypeRegister.addParams(compensate)
+	e.paramTypeRegister.addParams(subTxId, action)
+	e.paramTypeRegister.addParams(subTxId, compensate)
 	e.subTxDefinitions.addDefinition(subTxId, action, compensate)
-
-	// TODO
-	// compensateするときに戻されるのは当然当該のサーバでaddDefinitionされたもののみなので、
-	// 他サーバで定義したものは取り出せないのに、一気に打ち消しに行こうとするためdefinition not foundになる。
 
 	return e
 }
 
-func (e *ExecutionCoodinator) CreateSubTx(ctx context.Context, serverId string, id uint64) *Saga {
+func (e *ExecutionCoodinator) CreateSubTx(ctx context.Context, conn *gorp.DbMap, serverId string, id uint64) *Saga {
 	return &Saga{
 		logId:    LogPrefix + strconv.FormatInt(int64(id), 10),
 		serverId: serverId,
 		context:  ctx,
+		conn:     conn,
 		sec:      e,
 	}
 }
 
-func (e *ExecutionCoodinator) MustFindParamName(typ reflect.Type) string {
-	name, ok := e.paramTypeRegister.findTypeName(typ)
+func (e *ExecutionCoodinator) MustFindParamName(subTxId string, typ reflect.Type) string {
+	name, ok := e.paramTypeRegister.findTypeName(subTxId, typ)
 	if !ok {
 		panic("Can not find param name: " + typ.String())
 	}
 	return name
 }
 
-func (e *ExecutionCoodinator) MustFindParamType(name string) reflect.Type {
-	typ, ok := e.paramTypeRegister.findType(name)
+func (e *ExecutionCoodinator) MustFindParamType(subTxId, name string) reflect.Type {
+	typ, ok := e.paramTypeRegister.findType(subTxId, name)
 	if !ok {
 		panic("Can not find param type: " + name)
 	}
