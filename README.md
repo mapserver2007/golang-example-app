@@ -15,6 +15,8 @@ $> http://localhost:4001/v1/users_and_items -i # grpc-server
   * grpcサーバ(サービス1)
   * grpcサーバ(サービス2)
 * サーバ間gRPC通信
+* 分散トランザクション実装
+  * sagaパターン
 * DB処理
   * gorp
 * ログ出力
