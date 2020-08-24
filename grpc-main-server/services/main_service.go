@@ -71,11 +71,11 @@ func (s *MainService) PostUsersAndItems(ctx context.Context, in *pb.PostUsersAnd
 	var err error
 	if err = s.grpcService1PostUsers(ctx, tx.sagaId, &req1); err != nil {
 		log.Error(err)
-		return &pb.SimpleApiResponse{Status: 500}, nil
+		return &pb.SimpleApiResponse{Status: 500, Message: err.Error()}, err
 	}
 	if err = s.grpcService2PostItems(ctx, tx.sagaId, &req2); err != nil {
 		log.Error(err)
-		return &pb.SimpleApiResponse{Status: 500}, nil
+		return &pb.SimpleApiResponse{Status: 500, Message: err.Error()}, err
 	}
 
 	tx.endSubTx()

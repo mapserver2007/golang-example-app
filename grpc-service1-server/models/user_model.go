@@ -7,6 +7,7 @@ import (
 
 	database "github.com/mapserver2007/golang-example-app/common/database"
 	pb "github.com/mapserver2007/golang-example-app/gen/go"
+
 	"github.com/mapserver2007/golang-example-app/grpc-service1-server/models/sqls"
 )
 
@@ -35,6 +36,7 @@ func (db *User) CreateUser(param *pb.PostUserRequest) (sql.Result, error) {
 	result, err := database.TransactionScope(db.Connection, func(tran *gorp.Transaction) (sql.Result, error) {
 		return tran.Exec(sqls.CreateUser(), param.Name, param.Age)
 	})
+
 	return result, err
 }
 

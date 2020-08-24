@@ -38,10 +38,11 @@ func newSagaService(ctx context.Context, serverId string) *sagaService {
 	}
 }
 
-func (s *sagaService) createSubTx(in *pb.PostItemsRequest, conn *gorp.DbMap) {
-	subtx.SubTxDefinitions.
+func (s *sagaService) createSubTx(in *pb.PostItemsRequest, conn *gorp.DbMap) error {
+	result := subtx.SubTxDefinitions.
 		CreateSubTx(s.ctx, conn, s.serverId, in.Uuid).
 		ExecSub("createItem", in.Items)
+	return result.Error()
 }
 
 func (s *ItemService) GetItem(ctx context.Context, in *pb.GetItemRequest) (*pb.GetItemResponse, error) {
@@ -75,9 +76,7 @@ func (s *ItemService) GetItems(ctx context.Context, _ *empty.Empty) (*pb.GetItem
 	return &pb.GetItemsResponse{Items: items}, nil
 }
 
-func (s *ItemService) PostItems(ctx context.Context, in *pb.PostItemsRequest) (*pb.SimpleApiResponse, error) {
+func (s *ItemService) PostItems(ctx context.Context, in *pb.PostItemsRequest) (*empty.Empty, error) {
 	tx := newSagaService(ctx, "grpc-service2-server")
-	tx.createSubTx(in, s.Connection)
-
-	return &pb.SimpleApiResponse{Status: 200}, nil
+	return &empty.Empty{}, tx.createSubTx(in, s.Connection)
 }

@@ -28,6 +28,7 @@ type Saga struct {
 	context  context.Context
 	conn     *gorp.DbMap
 	sec      *ExecutionCoodinator
+	err      error
 }
 
 func (s *Saga) StartSaga() *Saga {
@@ -76,6 +77,7 @@ func (s *Saga) ExecSub(subTxId string, args ...interface{}) *Saga {
 	appLog.Info("saga log: " + log.mustMarshal())
 
 	if len(result) == 2 && !result[1].IsNil() {
+		s.err = result[1].Interface().(error)
 		s.Abort()
 		return s
 	}
@@ -177,6 +179,7 @@ func (s *Saga) compensate(txLog *Log) {
 	result := subDef.compensate.Call(params)
 
 	if len(result) == 1 && !result[0].IsNil() {
+		s.err = result[0].Interface().(error)
 		s.Abort()
 		return
 	}
@@ -195,4 +198,8 @@ func (s *Saga) compensate(txLog *Log) {
 	appLog.Info("saga logId: " + s.logId)
 	appLog.Info("saga SubTxId: " + txLog.SubTxId)
 	appLog.Info("saga log: " + cLog.mustMarshal())
+}
+
+func (s *Saga) Error() error {
+	return s.err
 }

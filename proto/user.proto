@@ -43,7 +43,7 @@ message PutUserRequest {
 service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
   rpc GetUsers (google.protobuf.Empty) returns (GetUsersResponse);
-  rpc PostUsers (PostUsersRequest) returns (SimpleApiResponse);
+  rpc PostUsers (PostUsersRequest) returns (google.protobuf.Empty);
 }
 
 // service GetUsersService {

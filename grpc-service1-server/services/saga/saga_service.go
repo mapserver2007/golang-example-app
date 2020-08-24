@@ -35,6 +35,5 @@ func CreateUserCompensate(_ context.Context, conn *gorp.DbMap, lastInsertIds []i
 			return err
 		}
 	}
-
 	return nil
 }

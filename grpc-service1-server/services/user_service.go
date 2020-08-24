@@ -38,10 +38,11 @@ func newSagaService(ctx context.Context, serverId string) *sagaService {
 	}
 }
 
-func (s *sagaService) createSubTx(in *pb.PostUsersRequest, conn *gorp.DbMap) {
-	subtx.SubTxDefinitions.
+func (s *sagaService) createSubTx(in *pb.PostUsersRequest, conn *gorp.DbMap) error {
+	result := subtx.SubTxDefinitions.
 		CreateSubTx(s.ctx, conn, s.serverId, in.Uuid).
 		ExecSub("createUser", in.Users)
+	return result.Error()
 }
 
 func (s *UserService) GetUser(_ context.Context, in *pb.GetUserRequest) (*pb.GetUserResponse, error) {
@@ -75,9 +76,7 @@ func (s *UserService) GetUsers(ctx context.Context, in *empty.Empty) (*pb.GetUse
 	return &pb.GetUsersResponse{Users: users}, nil
 }
 
-func (s *UserService) PostUsers(ctx context.Context, in *pb.PostUsersRequest) (*pb.SimpleApiResponse, error) {
+func (s *UserService) PostUsers(ctx context.Context, in *pb.PostUsersRequest) (*empty.Empty, error) {
 	tx := newSagaService(ctx, "grpc-service1-server")
-	tx.createSubTx(in, s.Connection)
-
-	return &pb.SimpleApiResponse{Status: 200}, nil
+	return &empty.Empty{}, tx.createSubTx(in, s.Connection)
 }
