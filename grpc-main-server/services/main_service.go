@@ -67,6 +67,7 @@ func (s *MainService) PostUsersAndItems(ctx context.Context, in *pb.PostUsersAnd
 
 	tx := newSagaService(ctx, "grpc-main-server")
 	tx.startSubTx()
+	defer tx.endSubTx()
 
 	var err error
 	if err = s.grpcService1PostUsers(ctx, tx.sagaId, &req1); err != nil {
@@ -77,8 +78,6 @@ func (s *MainService) PostUsersAndItems(ctx context.Context, in *pb.PostUsersAnd
 		log.Error(err)
 		return &pb.SimpleApiResponse{Status: 500, Message: err.Error()}, err
 	}
-
-	tx.endSubTx()
 
 	return &pb.SimpleApiResponse{Status: 200}, nil
 }
